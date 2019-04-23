@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Form, Segment } from 'semantic-ui-react';
+import { Form, Segment, Header } from 'semantic-ui-react';
 import './LoginPage.css';
 
 class LoginPage extends Component {
@@ -44,31 +44,36 @@ class LoginPage extends Component {
             </h2>
           )}
         </Segment>
-        <Form onSubmit={this.login}>
-          <h1>Login</h1>
-          <Form.Input
-            label="Username" type="text"
-            name="username" value={this.state.username}
-            onChange={this.handleInputChangeFor('username')}
-          />
-          <Form.Input
-            label="Password" type="password"
-            name="password" value={this.state.password}
-            onChange={this.handleInputChangeFor('password')}
-          />
-          <Form.Group>
-            <Form.Button
-              type="submit"
-              name="submit">
-              Log in
-            </Form.Button>
-            <Form.Button
-              type="button"
-              onClick={() => { this.props.dispatch({ type: 'SET_TO_REGISTER_MODE' }) }}>
-              Register
-            </Form.Button>
-          </Form.Group>
-        </Form>
+
+        <Segment >
+          <Header as='h1'>
+            Login
+          </Header>
+          <Form onSubmit={this.login}>
+            <Form.Input
+              label="Username" type="text"
+              name="username" value={this.state.username}
+              onChange={this.handleInputChangeFor('username')}
+            />
+            <Form.Input
+              label="Password" type="password"
+              name="password" value={this.state.password}
+              onChange={this.handleInputChangeFor('password')}
+            />
+            <Form.Group>
+              <Form.Button
+                type="submit"
+                name="submit">
+                Log in
+              </Form.Button>
+              <Form.Button
+                type="button"
+                onClick={() => { this.props.dispatch({ type: 'SET_TO_REGISTER_MODE' }) }}>
+                Register
+              </Form.Button>
+            </Form.Group>
+          </Form>
+        </Segment>
       </div>
     );
   }
