@@ -25,9 +25,9 @@ CREATE TABLE "school" (
 
 CREATE TABLE "LEA" (
   "id" serial PRIMARY KEY,
-  "state_ref" varchar
+  "state_ref" varchar,
   "LEA_name" varchar,
-  "NCES_district_id" bigint UNIQUE,
+  "NCES_district_id" bigint UNIQUE
 );
 
 CREATE TABLE "state" (
