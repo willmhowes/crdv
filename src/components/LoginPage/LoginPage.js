@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Form, Segment } from 'semantic-ui-react';
+import './LoginPage.css';
 
 class LoginPage extends Component {
   state = {
@@ -31,57 +33,42 @@ class LoginPage extends Component {
 
   render() {
     return (
-      <div>
-        {this.props.errors.loginMessage && (
-          <h2
-            className="alert"
-            role="alert"
-          >
-            {this.props.errors.loginMessage}
-          </h2>
-        )}
-        <form onSubmit={this.login}>
+      <div className="LoginPage-form">
+        <Segment>
+          {this.props.errors.loginMessage && (
+            <h2
+              className="alert"
+              role="alert"
+            >
+              {this.props.errors.loginMessage}
+            </h2>
+          )}
+        </Segment>
+        <Form onSubmit={this.login}>
           <h1>Login</h1>
-          <div>
-            <label htmlFor="username">
-              Username:
-              <input
-                type="text"
-                name="username"
-                value={this.state.username}
-                onChange={this.handleInputChangeFor('username')}
-              />
-            </label>
-          </div>
-          <div>
-            <label htmlFor="password">
-              Password:
-              <input
-                type="password"
-                name="password"
-                value={this.state.password}
-                onChange={this.handleInputChangeFor('password')}
-              />
-            </label>
-          </div>
-          <div>
-            <input
-              className="log-in"
+          <Form.Input
+            label="Username" type="text"
+            name="username" value={this.state.username}
+            onChange={this.handleInputChangeFor('username')}
+          />
+          <Form.Input
+            label="Password" type="password"
+            name="password" value={this.state.password}
+            onChange={this.handleInputChangeFor('password')}
+          />
+          <Form.Group>
+            <Form.Button
               type="submit"
-              name="submit"
-              value="Log In"
-            />
-          </div>
-        </form>
-        <center>
-          <button
-            type="button"
-            className="link-button"
-            onClick={() => {this.props.dispatch({type: 'SET_TO_REGISTER_MODE'})}}
-          >
-            Register
-          </button>
-        </center>
+              name="submit">
+              Log in
+            </Form.Button>
+            <Form.Button
+              type="button"
+              onClick={() => { this.props.dispatch({ type: 'SET_TO_REGISTER_MODE' }) }}>
+              Register
+            </Form.Button>
+          </Form.Group>
+        </Form>
       </div>
     );
   }
