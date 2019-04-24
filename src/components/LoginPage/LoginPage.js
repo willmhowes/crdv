@@ -46,33 +46,41 @@ class LoginPage extends Component {
         </Segment>
 
         <Segment >
-          <Header as='h1'>
+          <Header as="h1">
             Login
           </Header>
           <Form onSubmit={this.login}>
             <Form.Input
               label="Username" type="text"
               name="username" value={this.state.username}
+              placeholder="Username"
               onChange={this.handleInputChangeFor('username')}
             />
             <Form.Input
               label="Password" type="password"
               name="password" value={this.state.password}
+              placeholder="Password"
               onChange={this.handleInputChangeFor('password')}
             />
-            <Form.Group>
-              <Form.Button
-                type="submit"
-                name="submit">
-                Log in
-              </Form.Button>
-              <Form.Button
-                type="button"
-                onClick={() => { this.props.dispatch({ type: 'SET_TO_REGISTER_MODE' }) }}>
-                Register
-              </Form.Button>
-            </Form.Group>
+            <Form.Button
+              primary
+              fluid
+              type="submit"
+              name="submit">
+              Log in
+            </Form.Button>
+            <Form.Button
+              type="button"
+              basic
+              secondary
+              fluid
+              size="small"
+              onClick={() => { this.props.dispatch({ type: 'SET_TO_REGISTER_MODE' }) }}>
+              Register
+            </Form.Button>
           </Form>
+
+
         </Segment>
       </div>
     );
