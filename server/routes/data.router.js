@@ -7,7 +7,7 @@ const router = express.Router();
  */
 router.get('/state', (req, res) => {
    const action =
-      `SELECT * FROM "state"`;
+      `SELECT * FROM "state";`;
 
    pool.query(action)
       .then((response) => {

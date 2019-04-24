@@ -5,20 +5,18 @@ import { Component } from 'react';
 
 class SelectionPage extends Component {
 
-   state = { name: '', email: '', submittedName: '', submittedEmail: '' }
+   componentDidMount = () => {
+      this.props.dispatch({ type: 'GET_STATE_LIST' });
+      console.log('in selectionpage');
 
-   handleChange = (e, { name, value }) => this.setState({ [name]: value })
-
-   handleSubmit = () => {
-      const { name, email } = this.state
-      this.setState({ submittedName: name, submittedEmail: email })
    }
 
    render() {
-      const { name, email, submittedName, submittedEmail } = this.state;
+      // const { name, email, submittedName, submittedEmail } = this.state;
       return (
          <div>
-
+            <h1>Hello</h1>
+            {JSON.stringify(this.props.stateList)}
          </div>
       );
    }
@@ -30,7 +28,7 @@ class SelectionPage extends Component {
 // const mapStateToProps = ({user}) => ({ user });
 const mapStateToProps = state => ({
    user: state.user,
-   stateList: state.scopeOption.stateList,
+   stateList: state.scopeOption.stateReducer,
 });
 
 // this allows us to use <App /> in index.js
