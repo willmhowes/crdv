@@ -11,16 +11,22 @@ class Nav extends Component {
       console.log('account button activated');
     } else if (event.target.getAttribute('name') === 'log_out') {
       console.log('logout button activated');
+      this.props.dispatch({ type: 'LOGOUT' });
     }
   }
 
   handleClick = (event) => {
     if (event.target.getAttribute('value') === 'CRDVisualizer') {
       console.log('home button activated');
+      this.props.dispatch({ type: 'SET_TO_LOGIN_MODE' });
+      this.props.history.push('/')
     } else if (event.target.getAttribute('value') === 'faq') {
       console.log('faq button activated');
     } else if (event.target.getAttribute('value') === 'login/register') {
       console.log('login/register button activated');
+    } else if (event.target.getAttribute('value') === 'about') {
+      console.log('about button activated');
+      this.props.history.push('/about');
     }
   }
 
@@ -37,11 +43,17 @@ class Nav extends Component {
         <Menu.Menu position='right'>
           <Menu.Item
             onClick={this.handleClick}
+            value="about"
+          >
+            About
+          </Menu.Item>
+          <Menu.Item
+            onClick={this.handleClick}
             value="faq"
           >
             FAQ
           </Menu.Item>
-          
+
           {this.props.user.id ?
             <Dropdown item text={this.props.user.username}>
               <Dropdown.Menu>
