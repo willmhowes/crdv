@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Form, Segment, Header } from 'semantic-ui-react';
+import { Form, Segment, Header, Message } from 'semantic-ui-react';
 import './LoginPage.css';
 
 class LoginPage extends Component {
@@ -25,43 +25,56 @@ class LoginPage extends Component {
     }
   } // end login
 
-  handleInputChangeFor = propertyName => (event) => {
+  handleInputChangeFor = () => (event) => {
     this.setState({
-      [propertyName]: event.target.value,
+      [event.target.getAttribute('name')]: event.target.value,
     });
+  }
+
+  // Takes arguements of properties for Form.Input component
+  renderFormInput = (label, type, name, value ) => {
+    // if error message exists, renders input with 'error' property
+    if (!!this.props.errors.loginMessage) {
+      return (
+        <Form.Input
+          error
+          label={label} type={type}
+          name={name} value={value}
+          placeholder={label}
+          onChange={this.handleInputChangeFor()}
+        />
+      )
+    // else, renders standard input field
+    } else {
+      return (
+        <Form.Input
+          label={label} type={type}
+          name={name} value={value}
+          placeholder={label}
+          onChange={this.handleInputChangeFor()}
+        />
+      )
+    }
   }
 
   render() {
     return (
       <div className="LoginPage-form">
-        <Segment>
-          {this.props.errors.loginMessage && (
-            <h2
-              className="alert"
-              role="alert"
-            >
-              {this.props.errors.loginMessage}
-            </h2>
-          )}
-        </Segment>
-
+        {this.props.errors.loginMessage && (
+          <Message
+            error
+            header="Error"
+            role="alert"
+            content={this.props.errors.loginMessage}
+          />
+        )}
         <Segment >
           <Header as="h1">
             Login
           </Header>
           <Form onSubmit={this.login}>
-            <Form.Input
-              label="Username" type="text"
-              name="username" value={this.state.username}
-              placeholder="Username"
-              onChange={this.handleInputChangeFor('username')}
-            />
-            <Form.Input
-              label="Password" type="password"
-              name="password" value={this.state.password}
-              placeholder="Password"
-              onChange={this.handleInputChangeFor('password')}
-            />
+            {this.renderFormInput("Username", "text", "username", this.state.username)}
+            {this.renderFormInput("Password", "password", "password", this.state.password)}
             <Form.Button
               primary
               fluid
@@ -79,8 +92,6 @@ class LoginPage extends Component {
               Register
             </Form.Button>
           </Form>
-
-
         </Segment>
       </div>
     );
