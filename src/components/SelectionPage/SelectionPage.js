@@ -17,7 +17,8 @@ class SelectionPage extends Component {
       this.props.dispatch({ type: 'GET_STATE_LIST' });
    }
 
-   // updates stateValue, dispatches request for list of relevant districts
+   // updates stateValue in local state
+   // then dispatches request for list of relevant districts
    handleStateListChange = (event, { value }) => {
       this.props.dispatch({ type: 'GET_DISTRICT_LIST', payload: value });
       this.setState({
@@ -25,7 +26,8 @@ class SelectionPage extends Component {
       });
    }
 
-   // updates districtValue, dispatches request for list of relevant schools
+   // updates districtValue in local state
+   // then dispatches request for list of relevant schools
    handleDistrictListChange = (event, { value }) => {
       this.props.dispatch({ type: 'GET_SCHOOL_LIST', payload: value });
       this.setState({
@@ -33,6 +35,7 @@ class SelectionPage extends Component {
       });
    }
 
+   // updates districtValue in local state
    handleSchoolListChange = (event, { value }) => {
       this.setState({
          schoolValue: value,
