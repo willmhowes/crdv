@@ -2,12 +2,10 @@ const express = require('express');
 const pool = require('../modules/pool');
 const router = express.Router();
 
-/**
- * GET route template
- */
+// GET list of states
 router.get('/state', (req, res) => {
    const action =
-      `SELECT * FROM "state";`;
+      `SELECT * FROM "state" ORDER BY "state"."state_name";`;
 
    pool.query(action)
       .then((response) => {
@@ -17,12 +15,27 @@ router.get('/state', (req, res) => {
    });
 });
 
-router.get('/:state/district', (req, res) => {
+// GET list of districts in a state
+router.get('/district/:state', (req, res) => {
    const state = req.params.state;
    const action =
-      `SELECT * FROM "LEA" WHERE "state_ref" = $1;`;
+      `SELECT * FROM "LEA" WHERE "state_ref" = $1 ORDER BY "LEA"."LEA_name";`;
 
    pool.query(action, [state])
+      .then((response) => {
+         res.send(response.rows);
+      }).catch(() => {
+         res.sendStatus(500);
+      });
+});
+
+// GET list of schools in a given district in a state
+router.get('/school/:district', (req, res) => {
+   const district = req.params.district;
+   const action =
+      `SELECT * FROM "school" WHERE "LEA_ref" = $1 ORDER BY "school"."school_name";`;
+
+   pool.query(action, [district])
       .then((response) => {
          res.send(response.rows);
       }).catch(() => {

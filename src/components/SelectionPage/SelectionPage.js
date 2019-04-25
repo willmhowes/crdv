@@ -8,17 +8,16 @@ class SelectionPage extends Component {
 
    state = {
       stateValue: '',
+      districtValue: '',
+      schoolValue: '',
    }
 
+   // Loads list of states after component mounts
    componentDidMount = () => {
       this.props.dispatch({ type: 'GET_STATE_LIST' });
-      console.log('in selectionpage');
    }
 
-   handleSubmit = () => {
-
-   }
-
+   // updates stateValue, dispatches request for list of relevant districts
    handleStateListChange = (event, { value }) => {
       this.props.dispatch({ type: 'GET_DISTRICT_LIST', payload: value });
       this.setState({
@@ -26,90 +25,148 @@ class SelectionPage extends Component {
       });
    }
 
+   // updates districtValue, dispatches request for list of relevant schools
+   handleDistrictListChange = (event, { value }) => {
+      this.props.dispatch({ type: 'GET_SCHOOL_LIST', payload: value });
+      this.setState({
+         districtValue: value,
+      });
+   }
+
+   handleSchoolListChange = (event, { value }) => {
+      this.setState({
+         schoolValue: value,
+      });
+   }
+
+   // Renders either:
+   // 1. loading dropdown menu
+   // 2. list of states to select
    renderStateInput = () => {
       if (this.props.stateList[0] === 'state') {
          return (
-            <Form.Dropdown text='State' loading disabled />
+            <Form.Dropdown
+               search
+               selection
+               disabled
+               options={[{ key: 0, value: null, text: null }]}
+               text="State"
+               label="State"
+               loading
+            />
          );
       } else {
-         const stateListOptions = this.props.stateList.map(option => {
-            return { key: option.state, value: option.state, text: option.state_name }
+         const stateListOptions = this.props.stateList.map((option, i) => {
+            return { key: i, value: option.state, text: option.state_name }
          });
 
          return (
             <Form.Dropdown
-               fluid
                search
                selection
-               placeholder='State'
-               value={this.state.value}
+               placeholder="State"
+               value={this.state.stateValue}
                onChange={this.handleStateListChange}
                options={stateListOptions}
+               label="State"
             />
          );
       }
    }
 
+   // Renders either:
+   // 1. disabled dropdown menu
+   // 2. contextually relevant dropdown of districts in selected state
    renderDistrictInput = () => {
       if (this.props.districtList[0] === 'District') {
          return (
             <Form.Dropdown
-               fluid
                search
                selection
                disabled
-               placeholder='District'
+               options={[{ key: 0, value: null, text: null }]}
+               placeholder="District"
+               label="District"
             />
          );
       } else {
-         const districtListOptions = this.props.districtList.map(option => {
-            return { key: option.NCES_district_id, value: option.NCES_district_id, text: option.LEA_name }
+         const districtListOptions = this.props.districtList.map((option, i) => {
+            return { key: i, value: option.NCES_district_id, text: option.LEA_name }
          });
 
          return (
             <Form.Dropdown
-               fluid
                search
                selection
-               placeholder='State'
+               placeholder="District"
+               value={this.state.districtValue}
+               onChange={this.handleDistrictListChange}
                options={districtListOptions}
+               label="District"
+            />
+         );
+      }
+   }
+
+   // Renders either:
+   // 1. disabled dropdown menu
+   // 2. contextually relevant dropdown of schools in selected state
+   renderSchoolInput = () => {
+      if (this.props.schoolList[0] === 'School') {
+         return (
+            <Form.Dropdown
+               search
+               selection
+               disabled
+               fluid
+               options={[{ key: 0, value: null, text: null }]}
+               placeholder="School"
+               label="School"
+            />
+         );
+      } else {
+         const schoolListOptions = this.props.schoolList.map((option, i) => {
+            return { key: i, value: option.NCES_school_id, text: option.school_name }
+         });
+
+         return (
+            <Form.Dropdown
+               search
+               selection
+               fluid
+               placeholder="School"
+               value={this.state.schoolValue}
+               onChange={this.handleSchoolListChange}
+               options={schoolListOptions}
+               label="School"
             />
          );
       }
    }
 
    render() {
-
-      // const { name, email, submittedName, submittedEmail } = this.state;
       return (
-         <Segment>
-            <div className="SelectionPage-div">
+         <section className="SelectionPage-section">
+            <Segment>
                <h1>Hello</h1>
-               {JSON.stringify(this.state.stateValue)}
-               <br />
-               <br />
                <Form onSubmit={this.handleSubmit}>
-                  {this.renderStateInput()}
-                  <br />
-                  {this.renderDistrictInput()}
-                  <br />
-                  <Form.Button type="submit">Submit</Form.Button>
+                  <Form.Group>
+                     {this.renderStateInput()}
+                     {this.renderDistrictInput()}
+                  </Form.Group>
+                  {this.renderSchoolInput()}
                </Form>
-            </div >
-         </Segment>
+            </Segment>
+         </section>
       );
    }
 }
 
-
-// Instead of taking everything from state, we just want the user info.
-// if you wanted you could write this code like this:
-// const mapStateToProps = ({user}) => ({ user });
 const mapStateToProps = state => ({
    user: state.user,
    stateList: state.scopeOption.stateReducer,
    districtList: state.scopeOption.districtReducer,
+   schoolList: state.scopeOption.schoolReducer,
 });
 
-// this allows us to use <App /> in index.js
 export default connect(mapStateToProps)(SelectionPage);
