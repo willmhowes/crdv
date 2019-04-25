@@ -43,7 +43,19 @@ router.get('/school/:district', (req, res) => {
       });
 });
 
-router.get('/data', (req, res) => {
+router.get('/scope/:scope/:scopeSelector', (req, res) => {
+   let scope = req.params.scope;
+   let scopeSelector = req.params.scopeSelector;
+   let action;
+
+   if (scope == 'state') {
+      response = yield axios.get(`/api/data/scope/${currentScope}/${stateValue}`);
+   } else if (scope == 'district') {
+      response = yield axios.get(`/api/data/scope/${currentScope}/${districtValue}`);
+   } else if (scope == 'school') {
+      response = yield axios.get(`/api/data/scope/${currentScope}/${schoolValue}`);
+   }
+
    const action =
       `SELECT "Category",
          SUM("American Indian or Alaska Native") AS "native_american",

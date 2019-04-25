@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Form, Segment } from 'semantic-ui-react';
+import { Form, Segment, Header } from 'semantic-ui-react';
 import { Component } from 'react';
 import './SelectionPage.css';
 
@@ -10,6 +10,9 @@ class SelectionPage extends Component {
       stateValue: '',
       districtValue: '',
       schoolValue: '',
+      datasetValue: '',
+      allowContinue: false,
+      currentScope: '',
    }
 
    // Loads list of states after component mounts
@@ -17,28 +20,49 @@ class SelectionPage extends Component {
       this.props.dispatch({ type: 'GET_STATE_LIST' });
    }
 
-   // updates stateValue in local state
+   // updates stateValue and scope in local state
    // then dispatches request for list of relevant districts
    handleStateListChange = (event, { value }) => {
       this.props.dispatch({ type: 'GET_DISTRICT_LIST', payload: value });
       this.setState({
          stateValue: value,
+         allowContinue: true,
+         currentScope: 'state'
       });
    }
 
-   // updates districtValue in local state
+   // updates districtValue and scope in local state
    // then dispatches request for list of relevant schools
    handleDistrictListChange = (event, { value }) => {
       this.props.dispatch({ type: 'GET_SCHOOL_LIST', payload: value });
       this.setState({
          districtValue: value,
+         currentScope: 'district'
       });
    }
 
-   // updates districtValue in local state
+   // updates schoolValue and scope in local state
+   // then dispatches request for list of relevant datasets
    handleSchoolListChange = (event, { value }) => {
+      // destructures everything except schoolValue and currentScope
+      // schoolValue is passed as the prop 'value'
+      // currentScope isn't set until setState, which is after the dispatch
+      const { stateValue, districtValue } = this.state;
+      const scopeInfo = { stateValue, districtValue, schoolValue: value };
+      const currentScope = 'school';
+      const payload = { currentScope, scopeInfo };
+      this.props.dispatch({ type: 'GET_DATASET_LIST', payload: payload });
+
       this.setState({
          schoolValue: value,
+         currentScope: 'school'
+      });
+   }
+
+   // updates datasetValue in local state
+   handleDatasetListChange = (event, { value }) => {
+      this.setState({
+         datasetValue: value,
       });
    }
 
@@ -147,17 +171,66 @@ class SelectionPage extends Component {
       }
    }
 
+   renderDataInput = () => {
+      if (this.props.datasetList[0] === 'Dataset') {
+         return (
+            <Form.Dropdown
+               search
+               selection
+               disabled
+               options={[{ key: 0, value: null, text: null }]}
+               placeholder="Dataset"
+               label="Dataset"
+               loading
+            />
+         );
+      } else {
+         const DatasetOptions = this.props.stateList.map((option, i) => {
+            return { key: i, value: option.state, text: option.state_name }
+         });
+
+         return (
+            <Form.Dropdown
+               search
+               selection
+               placeholder="Dataset"
+               value={this.state.datasetValue}
+               onChange={this.handleDatasetListChange}
+               options={DatasetOptions}
+               label="Dataset"
+            />
+         );
+      }
+   }
+
    render() {
       return (
          <section className="SelectionPage-section">
             <Segment>
-               <h1>Hello</h1>
+               <Header as='h1'>Select Scope of Data</Header>
                <Form onSubmit={this.handleSubmit}>
                   <Form.Group>
                      {this.renderStateInput()}
                      {this.renderDistrictInput()}
                   </Form.Group>
                   {this.renderSchoolInput()}
+                  {this.renderDataInput()}
+
+                  {this.state.allowContinue ?
+                     <Form.Button
+                        type="submit"
+                        primary
+                        fluid>
+                        Continue
+                  </Form.Button> :
+                     <Form.Button
+                        type="button"
+                        primary
+                        disabled
+                        fluid>
+                        Continue
+                  </Form.Button>}
+
                </Form>
             </Segment>
          </section>
@@ -170,6 +243,8 @@ const mapStateToProps = state => ({
    stateList: state.scopeOption.stateReducer,
    districtList: state.scopeOption.districtReducer,
    schoolList: state.scopeOption.schoolReducer,
+   datasetList: state.scopeOption.datasetReducer,
+   yearList: state.scopeOption.yearReducer,
 });
 
 export default connect(mapStateToProps)(SelectionPage);
