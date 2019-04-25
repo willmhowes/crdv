@@ -17,6 +17,19 @@ router.get('/state', (req, res) => {
    });
 });
 
+router.get('/:state/district', (req, res) => {
+   const state = req.params.state;
+   const action =
+      `SELECT * FROM "LEA" WHERE "state_ref" = $1;`;
+
+   pool.query(action, [state])
+      .then((response) => {
+         res.send(response.rows);
+      }).catch(() => {
+         res.sendStatus(500);
+      });
+});
+
 router.get('/data', (req, res) => {
    const action =
       `SELECT "Category",
