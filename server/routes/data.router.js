@@ -12,7 +12,7 @@ router.get('/state', (req, res) => {
          res.send(response.rows);
       }).catch(() => {
          res.sendStatus(500);
-   });
+      });
 });
 
 // GET list of districts in a state
@@ -48,28 +48,18 @@ router.get('/scope/:scope/:scopeSelector', (req, res) => {
    let scopeSelector = req.params.scopeSelector;
    let action;
 
-   if (scope == 'state') {
-      response = yield axios.get(`/api/data/scope/${currentScope}/${stateValue}`);
-   } else if (scope == 'district') {
-      response = yield axios.get(`/api/data/scope/${currentScope}/${districtValue}`);
-   } else if (scope == 'school') {
-      response = yield axios.get(`/api/data/scope/${currentScope}/${schoolValue}`);
+   if (scope === 'state') {
+      // response = yield axios.get(`/api/data/scope/${currentScope}/${districtValue}`);
+   } else if (scope === 'district') {
+      // response = yield axios.get(`/api/data/scope/${currentScope}/${districtValue}`);
+   } else if (scope === 'school') {
+      action = `SELECT * FROM "Discipline of Students without Disabilities"
+         JOIN "school" ON "school"."NCES_school_id" = "Discipline of Students without Disabilities"."school_id"
+         WHERE "school_id" = $1
+         ORDER BY "school"."school_name";`;
    }
 
-   const action =
-      `SELECT "Category",
-         SUM("American Indian or Alaska Native") AS "native_american",
-         SUM("Asian") AS "asian",
-         SUM("Hawaiian/ Pacific Islander") AS "pacific_islander",
-         SUM("Hispanic") AS "hispanic",
-         SUM("Black") AS "black",
-         SUM("White") AS "white",
-         SUM("Two or more races") AS "two_race"
-         FROM "Discipline of Students without Disabilities"
-         WHERE "school_id" = 466627000600 AND "Category" = 'Total enrollment'
-         GROUP BY "Category";`;
-
-   pool.query(action)
+   pool.query(action, [scopeSelector])
       .then((response) => {
          res.send(response.rows);
       }).catch(() => {
@@ -85,3 +75,16 @@ router.post('/', (req, res) => {
 });
 
 module.exports = router;
+
+// action =
+   //    `SELECT "Category",
+   //       SUM("American Indian or Alaska Native") AS "native_american",
+   //       SUM("Asian") AS "asian",
+   //       SUM("Hawaiian/ Pacific Islander") AS "pacific_islander",
+   //       SUM("Hispanic") AS "hispanic",
+   //       SUM("Black") AS "black",
+   //       SUM("White") AS "white",
+   //       SUM("Two or more races") AS "two_race"
+   //       FROM "Discipline of Students without Disabilities"
+   //       WHERE "school_id" = 466627000600 AND "Category" = 'Total enrollment'
+   //       GROUP BY "Category";`;

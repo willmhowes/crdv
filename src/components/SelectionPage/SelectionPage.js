@@ -15,6 +15,13 @@ class SelectionPage extends Component {
       currentScope: '',
    }
 
+   handleSubmit = () => {
+      const { stateValue, districtValue, schoolValue, currentScope } = this.state;
+      const scopeInfo = { stateValue, districtValue, schoolValue };
+      const payload = { currentScope, scopeInfo };
+      this.props.dispatch({ type: 'GET_SPECIFIC_DATASET', payload: payload });
+   }
+
    // Loads list of states after component mounts
    componentDidMount = () => {
       this.props.dispatch({ type: 'GET_STATE_LIST' });
@@ -26,7 +33,6 @@ class SelectionPage extends Component {
       this.props.dispatch({ type: 'GET_DISTRICT_LIST', payload: value });
       this.setState({
          stateValue: value,
-         allowContinue: true,
          currentScope: 'state'
       });
    }
@@ -55,7 +61,8 @@ class SelectionPage extends Component {
 
       this.setState({
          schoolValue: value,
-         currentScope: 'school'
+         currentScope: 'school',
+         allowContinue: true,
       });
    }
 
@@ -172,7 +179,7 @@ class SelectionPage extends Component {
    }
 
    renderDataInput = () => {
-      if (this.props.datasetList[0] === 'Dataset') {
+      if (!this.state.allowContinue) {
          return (
             <Form.Dropdown
                search
@@ -185,9 +192,12 @@ class SelectionPage extends Component {
             />
          );
       } else {
-         const DatasetOptions = this.props.stateList.map((option, i) => {
-            return { key: i, value: option.state, text: option.state_name }
-         });
+         const DatasetOptions =
+            [{
+               key: 0,
+               value: 'Discipline of Students without Disabilities',
+               text: 'Discipline of Students without Disabilities'
+            }];
 
          return (
             <Form.Dropdown
@@ -200,6 +210,22 @@ class SelectionPage extends Component {
                label="Dataset"
             />
          );
+      }
+   }
+
+   handleTESTRender = () => {
+      if (this.props.testData[0] === 'Data') {
+         return (
+            <div>
+               <h4>Data loads here...</h4>
+            </div>
+         );
+      } else {
+         return (
+            <div>
+               {JSON.stringify(this.props.testData)}
+            </div>
+         )
       }
    }
 
@@ -233,6 +259,9 @@ class SelectionPage extends Component {
 
                </Form>
             </Segment>
+            <Segment>
+               {this.handleTESTRender()}
+            </Segment>
          </section>
       );
    }
@@ -243,8 +272,8 @@ const mapStateToProps = state => ({
    stateList: state.scopeOption.stateReducer,
    districtList: state.scopeOption.districtReducer,
    schoolList: state.scopeOption.schoolReducer,
-   datasetList: state.scopeOption.datasetReducer,
-   yearList: state.scopeOption.yearReducer,
+   testData: state.scopeOption.specificDatasetReducer,
+   // yearList: state.scopeOption.yearReducer,
 });
 
 export default connect(mapStateToProps)(SelectionPage);

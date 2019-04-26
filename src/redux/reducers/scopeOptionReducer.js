@@ -27,30 +27,30 @@ const schoolReducer = (state = ['School'], action) => {
    }
 };
 
-const datasetReducer = (state = ['Dataset'], action) => {
+const specificDatasetReducer = (state = ['Data'], action) => {
    switch (action.type) {
-      case 'SET_DATASET_LIST':
+      case 'SET_SPECIFIC_DATASET':
          return action.payload;
       default:
          return state;
    }
 };
 
-const yearReducer = (state = ['Year'], action) => {
-   switch (action.type) {
-      case 'SET_DATASET_LIST_YEAR':
-         return action.payload;
-      default:
-         return state;
-   }
-};
+// const yearReducer = (state = ['Year'], action) => {
+//    switch (action.type) {
+//       case 'SET_DATASET_LIST_YEAR':
+//          return action.payload;
+//       default:
+//          return state;
+//    }
+// };
 
 const rootReducer = combineReducers({
    stateReducer,
    districtReducer,
    schoolReducer,
-   datasetReducer,
-   yearReducer,
+   specificDatasetReducer,
+   // yearReducer,
 });
 
 export default rootReducer;
