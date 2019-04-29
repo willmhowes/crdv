@@ -41,7 +41,7 @@ class App extends Component {
               path="/about"
               component={AboutPage}
             />
-            <Route
+            <ProtectedRoute
               exact
               path="/selection"
               component={SelectionPage}

@@ -12,7 +12,7 @@ router.get('/state', (req, res) => {
          res.send(response.rows);
       }).catch(() => {
          res.sendStatus(500);
-   });
+      });
 });
 
 // GET list of districts in a state
@@ -43,26 +43,81 @@ router.get('/school/:district', (req, res) => {
       });
 });
 
-router.get('/data', (req, res) => {
-   const action =
-      `SELECT "Category",
-         SUM("American Indian or Alaska Native") AS "native_american",
-         SUM("Asian") AS "asian",
-         SUM("Hawaiian/ Pacific Islander") AS "pacific_islander",
-         SUM("Hispanic") AS "hispanic",
-         SUM("Black") AS "black",
-         SUM("White") AS "white",
-         SUM("Two or more races") AS "two_race"
-         FROM "Discipline of Students without Disabilities"
-         WHERE "school_id" = 466627000600 AND "Category" = 'Total enrollment'
-         GROUP BY "Category";`;
+// GET list of datasets available to a given scope
+router.get('/dataset/:scope/:scopeSelector', (req, res) => {
+   let scope = req.params.scope;
+   let scopeSelector = req.params.scopeSelector;
+
+   let action =
+      `SELECT DISTINCT TABLE_NAME
+      FROM INFORMATION_SCHEMA.COLUMNS
+      WHERE COLUMN_NAME = 'school_id';`;
 
    pool.query(action)
-      .then((response) => {
-         res.send(response.rows);
+      .then(async (response) => {
+         let datasetList = response.rows;
+         let datasetListArray = [];
+         for (let i = 0; i < datasetList.length; i++) {
+            // console.log(datasetList[i].table_name);
+            const table = datasetList[i].table_name;
+            let action =
+               `SELECT DISTINCT TABLE_NAME,
+                  "${table}"."school_id",
+                  "${table}"."Year"
+               FROM INFORMATION_SCHEMA.COLUMNS
+               CROSS JOIN "${table}"
+	            WHERE TABLE_NAME = '${table}'
+                  AND "school_id" = $1;`;
+
+            await pool.query(action, [scopeSelector])
+               .then((response) => {
+                  datasetListArray.push(...response.rows);
+               });
+         }
+         res.send(datasetListArray);
       }).catch(() => {
          res.sendStatus(500);
       });
+});
+
+// GET specific dataset per user request
+router.get('/scope/:scope/:scopeSelector/:dataset/:year', async (req, res) => {
+   let scope = req.params.scope;
+   let scopeSelector = req.params.scopeSelector;
+   let datasetName = req.params.dataset;
+   let year = req.params.year;
+
+   // Fetches a list of datasets
+   let verifiedDataset = await pool.query(`
+      SELECT DISTINCT TABLE_NAME
+      FROM INFORMATION_SCHEMA.COLUMNS
+      WHERE COLUMN_NAME = 'school_id';
+   `);
+
+   // Converts response into an array of dataset names
+   verifiedDataset = verifiedDataset.rows.map(x => x.table_name);
+
+   // If the datasetName provided by client is valid, then proceed
+   if (verifiedDataset.includes(datasetName)) {
+      if (scope === 'state') {
+         // response = yield axios.get(`/api/data/scope/${currentScope}/${districtValue}`);
+      } else if (scope === 'district') {
+         // response = yield axios.get(`/api/data/scope/${currentScope}/${districtValue}`);
+      } else if (scope === 'school') {
+         action = `SELECT * FROM "${datasetName}"
+         JOIN "school" ON "school"."NCES_school_id" = "school_id"
+         WHERE "school_id" = $1 AND "Year" = $2
+         ORDER BY "school"."school_name";`;
+      }
+
+      pool.query(action, [scopeSelector, year])
+         .then((response) => {
+            res.send(response.rows);
+         }).catch((error) => {
+            res.sendStatus(500);
+            console.log(error);
+         });
+   }
 });
 
 /**
@@ -73,3 +128,4 @@ router.post('/', (req, res) => {
 });
 
 module.exports = router;
+
