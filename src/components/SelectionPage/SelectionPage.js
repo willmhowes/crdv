@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Form, Segment, Header } from 'semantic-ui-react';
 import { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import './SelectionPage.css';
 
 class SelectionPage extends Component {
@@ -22,6 +23,7 @@ class SelectionPage extends Component {
       const scopeInfo = { stateValue, districtValue, schoolValue, datasetValue, datasetYearValue };
       const payload = { currentScope, scopeInfo };
       this.props.dispatch({ type: 'GET_SPECIFIC_DATASET', payload: payload });
+      this.props.history.push('/visualizer');
    }
 
    // Loads list of states after component mounts
@@ -342,4 +344,4 @@ const mapStateToProps = state => ({
    testData: state.scopeOption.specificDatasetReducer,
 });
 
-export default connect(mapStateToProps)(SelectionPage);
+export default connect(mapStateToProps)(withRouter(SelectionPage));
