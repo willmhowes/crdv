@@ -43,6 +43,44 @@ router.get('/school/:district', (req, res) => {
       });
 });
 
+// GET list of datasets available to a given scope
+router.get('/dataset/:scope/:scopeSelector', (req, res) => {
+   let scope = req.params.scope;
+   let scopeSelector = req.params.scopeSelector;
+
+   let action =
+      `SELECT DISTINCT TABLE_NAME
+      FROM INFORMATION_SCHEMA.COLUMNS
+      WHERE COLUMN_NAME = 'school_id';`;
+
+   pool.query(action)
+      .then(async (response) => {
+         let datasetList = response.rows;
+         let datasetListArray = [];
+         for (let i = 0; i < datasetList.length; i++) {
+            // console.log(datasetList[i].table_name);
+            const table = datasetList[i].table_name;
+            let action =
+               `SELECT DISTINCT TABLE_NAME,
+                  "${table}"."school_id",
+                  "${table}"."Year"
+               FROM INFORMATION_SCHEMA.COLUMNS
+               CROSS JOIN "${table}"
+	            WHERE TABLE_NAME = '${table}'
+                  AND "school_id" = $1;`;
+
+            await pool.query(action, [scopeSelector])
+               .then((response) => {
+                  datasetListArray.push(...response.rows);
+               });
+         }
+         res.send(datasetListArray);
+      }).catch(() => {
+         res.sendStatus(500);
+      });
+});
+
+// GET specific dataset per user request
 router.get('/scope/:scope/:scopeSelector', (req, res) => {
    let scope = req.params.scope;
    let scopeSelector = req.params.scopeSelector;

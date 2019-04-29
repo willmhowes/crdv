@@ -27,6 +27,15 @@ const schoolReducer = (state = ['School'], action) => {
    }
 };
 
+const datasetListReducer = (state = ['Dataset_List'], action) => {
+   switch (action.type) {
+      case 'SET_DATASET_LIST':
+         return action.payload;
+      default:
+         return state;
+   }
+};
+
 const specificDatasetReducer = (state = ['Data'], action) => {
    switch (action.type) {
       case 'SET_SPECIFIC_DATASET':
@@ -49,6 +58,7 @@ const rootReducer = combineReducers({
    stateReducer,
    districtReducer,
    schoolReducer,
+   datasetListReducer,
    specificDatasetReducer,
    // yearReducer,
 });

@@ -30,6 +30,24 @@ function* fetchSchoolList(action) {
   }
 }
 
+function* fetchDatasetList(action) {
+  try {
+    let { currentScope, scopeInfo } = action.payload;
+    let { stateValue, districtValue, schoolValue } = scopeInfo;
+    let response;
+    if (currentScope === 'state') {
+      response = yield axios.get(`/api/data/dataset/${currentScope}/${stateValue}`);
+    } else if (currentScope === 'district') {
+      response = yield axios.get(`/api/data/dataset/${currentScope}/${districtValue}`);
+    } else if (currentScope === 'school') {
+      response = yield axios.get(`/api/data/dataset/${currentScope}/${schoolValue}`);
+    }
+    yield put({ type: 'SET_DATASET_LIST', payload: response.data });
+  } catch (error) {
+    console.log('list of datasets GET request failed', error);
+  }
+}
+
 function* fetchSpecificDataset(action) {
   try {
     let { currentScope, scopeInfo } = action.payload;
@@ -44,7 +62,7 @@ function* fetchSpecificDataset(action) {
     }
     yield put({ type: 'SET_SPECIFIC_DATASET', payload: response.data });
   } catch (error) {
-    console.log('list of schools GET request failed', error);
+    console.log('specific dataset GET request failed', error);
   }
 }
 
@@ -52,6 +70,7 @@ function* scopeSelectionSaga() {
   yield takeLatest('GET_STATE_LIST', fetchStateList);
   yield takeLatest('GET_DISTRICT_LIST', fetchDistrictList);
   yield takeLatest('GET_SCHOOL_LIST', fetchSchoolList);
+  yield takeLatest('GET_DATASET_LIST', fetchDatasetList);
   yield takeLatest('GET_SPECIFIC_DATASET', fetchSpecificDataset);
 }
 

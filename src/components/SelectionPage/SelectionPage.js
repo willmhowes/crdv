@@ -11,7 +11,9 @@ class SelectionPage extends Component {
       districtValue: '',
       schoolValue: '',
       datasetValue: '',
+      datasetYearValue: '',
       allowContinue: false,
+      showYearSelection: false,
       currentScope: '',
    }
 
@@ -70,6 +72,14 @@ class SelectionPage extends Component {
    handleDatasetListChange = (event, { value }) => {
       this.setState({
          datasetValue: value,
+         showYearSelection: true,
+      });
+   }
+
+   // updates datasetYearValue in local state
+   handleDatasetYearListChange = (event, { value }) => {
+      this.setState({
+         datasetYearValue: value,
       });
    }
 
@@ -178,36 +188,83 @@ class SelectionPage extends Component {
       }
    }
 
-   renderDataInput = () => {
+   renderDatasetInput = () => {
       if (!this.state.allowContinue) {
          return (
             <Form.Dropdown
                search
                selection
                disabled
+               fluid
                options={[{ key: 0, value: null, text: null }]}
                placeholder="Dataset"
                label="Dataset"
-               loading
             />
          );
       } else {
-         const DatasetOptions =
-            [{
-               key: 0,
-               value: 'Discipline of Students without Disabilities',
-               text: 'Discipline of Students without Disabilities'
-            }];
+         const datasetOptions = [];
+         const dataSetList = this.props.datasetList;
+         const distinctList = [...new Set(dataSetList.map(x => x.table_name))];
+
+         for (let i in distinctList) {
+            datasetOptions.push({
+               key: i + 1,
+               value: distinctList[i],
+               text: distinctList[i],
+            });
+         }
 
          return (
             <Form.Dropdown
                search
                selection
+               fluid
                placeholder="Dataset"
                value={this.state.datasetValue}
                onChange={this.handleDatasetListChange}
-               options={DatasetOptions}
+               options={datasetOptions}
                label="Dataset"
+            />
+         );
+      }
+   }
+
+   renderDatasetYearInput = () => {
+      if (!this.state.showYearSelection) {
+         return (
+            <Form.Dropdown
+               search
+               selection
+               fluid
+               disabled
+               options={[{ key: 0, value: null, text: null }]}
+               placeholder="Year"
+               label="Year"
+            />
+         );
+      } else {
+         const datasetYearOptions = [];
+         const dataSetList = this.props.datasetList;
+         for (let i in dataSetList) {
+            if (dataSetList[i].table_name === this.state.datasetValue) {
+               datasetYearOptions.push({
+                  key: i + 1,
+                  value: dataSetList[i].Year,
+                  text: dataSetList[i].Year,
+               });
+            }
+         }
+
+         return (
+            <Form.Dropdown
+               search
+               selection
+               fluid
+               placeholder="Year"
+               value={this.state.datasetYearValue}
+               onChange={this.handleDatasetYearListChange}
+               options={datasetYearOptions}
+               label="Year"
             />
          );
       }
@@ -240,7 +297,10 @@ class SelectionPage extends Component {
                      {this.renderDistrictInput()}
                   </Form.Group>
                   {this.renderSchoolInput()}
-                  {this.renderDataInput()}
+                  <Form.Group widths="equal">
+                     {this.renderDatasetInput()}
+                     {this.renderDatasetYearInput()}
+                  </Form.Group>
 
                   {this.state.allowContinue ?
                      <Form.Button
@@ -272,6 +332,7 @@ const mapStateToProps = state => ({
    stateList: state.scopeOption.stateReducer,
    districtList: state.scopeOption.districtReducer,
    schoolList: state.scopeOption.schoolReducer,
+   datasetList: state.scopeOption.datasetListReducer,
    testData: state.scopeOption.specificDatasetReducer,
    // yearList: state.scopeOption.yearReducer,
 });
