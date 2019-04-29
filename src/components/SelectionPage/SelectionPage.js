@@ -340,7 +340,6 @@ const mapStateToProps = state => ({
    schoolList: state.scopeOption.schoolReducer,
    datasetList: state.scopeOption.datasetListReducer,
    testData: state.scopeOption.specificDatasetReducer,
-   // yearList: state.scopeOption.yearReducer,
 });
 
 export default connect(mapStateToProps)(SelectionPage);

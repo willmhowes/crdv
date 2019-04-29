@@ -45,22 +45,12 @@ const specificDatasetReducer = (state = ['Data'], action) => {
    }
 };
 
-// const yearReducer = (state = ['Year'], action) => {
-//    switch (action.type) {
-//       case 'SET_DATASET_LIST_YEAR':
-//          return action.payload;
-//       default:
-//          return state;
-//    }
-// };
-
 const rootReducer = combineReducers({
    stateReducer,
    districtReducer,
    schoolReducer,
    datasetListReducer,
    specificDatasetReducer,
-   // yearReducer,
 });
 
 export default rootReducer;
