@@ -81,28 +81,43 @@ router.get('/dataset/:scope/:scopeSelector', (req, res) => {
 });
 
 // GET specific dataset per user request
-router.get('/scope/:scope/:scopeSelector', (req, res) => {
+router.get('/scope/:scope/:scopeSelector/:dataset/:year', async (req, res) => {
    let scope = req.params.scope;
    let scopeSelector = req.params.scopeSelector;
-   let action;
+   let datasetName = req.params.dataset;
+   let year = req.params.year;
 
-   if (scope === 'state') {
-      // response = yield axios.get(`/api/data/scope/${currentScope}/${districtValue}`);
-   } else if (scope === 'district') {
-      // response = yield axios.get(`/api/data/scope/${currentScope}/${districtValue}`);
-   } else if (scope === 'school') {
-      action = `SELECT * FROM "Discipline of Students without Disabilities"
-         JOIN "school" ON "school"."NCES_school_id" = "Discipline of Students without Disabilities"."school_id"
-         WHERE "school_id" = $1
+   // Fetches a list of datasets
+   let verifiedDataset = await pool.query(`
+      SELECT DISTINCT TABLE_NAME
+      FROM INFORMATION_SCHEMA.COLUMNS
+      WHERE COLUMN_NAME = 'school_id';
+   `);
+
+   // Converts response into an array of dataset names
+   verifiedDataset = verifiedDataset.rows.map(x => x.table_name);
+
+   // If the datasetName provided by client is valid, then proceed
+   if (verifiedDataset.includes(datasetName)) {
+      if (scope === 'state') {
+         // response = yield axios.get(`/api/data/scope/${currentScope}/${districtValue}`);
+      } else if (scope === 'district') {
+         // response = yield axios.get(`/api/data/scope/${currentScope}/${districtValue}`);
+      } else if (scope === 'school') {
+         action = `SELECT * FROM "${datasetName}"
+         JOIN "school" ON "school"."NCES_school_id" = "school_id"
+         WHERE "school_id" = $1 AND "Year" = $2
          ORDER BY "school"."school_name";`;
-   }
+      }
 
-   pool.query(action, [scopeSelector])
-      .then((response) => {
-         res.send(response.rows);
-      }).catch(() => {
-         res.sendStatus(500);
-      });
+      pool.query(action, [scopeSelector, year])
+         .then((response) => {
+            res.send(response.rows);
+         }).catch((error) => {
+            res.sendStatus(500);
+            console.log(error);
+         });
+   }
 });
 
 /**

@@ -18,8 +18,8 @@ class SelectionPage extends Component {
    }
 
    handleSubmit = () => {
-      const { stateValue, districtValue, schoolValue, currentScope } = this.state;
-      const scopeInfo = { stateValue, districtValue, schoolValue };
+      const { stateValue, districtValue, schoolValue, datasetValue, datasetYearValue, currentScope } = this.state;
+      const scopeInfo = { stateValue, districtValue, schoolValue, datasetValue, datasetYearValue };
       const payload = { currentScope, scopeInfo };
       this.props.dispatch({ type: 'GET_SPECIFIC_DATASET', payload: payload });
    }
@@ -188,6 +188,9 @@ class SelectionPage extends Component {
       }
    }
 
+   // Renders either:
+   // 1. disabled dropdown menu
+   // 2. dropdown of available datasets in selected scope
    renderDatasetInput = () => {
       if (!this.state.allowContinue) {
          return (
@@ -229,6 +232,9 @@ class SelectionPage extends Component {
       }
    }
 
+   // Renders either:
+   // 1. disabled dropdown menu
+   // 2. dropdown of available years matching the selected dataset
    renderDatasetYearInput = () => {
       if (!this.state.showYearSelection) {
          return (
