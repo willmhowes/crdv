@@ -8,6 +8,17 @@ import './Visualizer.css';
 
 class Visualizer extends Component {
 
+   componentDidMount = () => {
+      this.getUrl();
+   }
+
+   getUrl = () => {
+      const pathSplit = window.location.hash.split('/')
+      // const id = Number(pathSplit[1]);
+      console.log(pathSplit);
+      // this.props.dispatch({ type: 'FETCH_THEME', payload: id });
+   }
+
    renderGraph = (dataset, i) => {
       let tableData = [
          dataset['American Indian or Alaska Native'],
@@ -103,7 +114,7 @@ class Visualizer extends Component {
       return (
          <section>
             <Header as="h1">
-               Login
+               Visualizer
             </Header>
 
             {/* {this.handleGraphRender()} */}

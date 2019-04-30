@@ -48,7 +48,6 @@ class App extends Component {
               component={SelectionPage}
             />
             <ProtectedRoute
-              exact
               path="/visualizer"
               component={Visualizer}
             />

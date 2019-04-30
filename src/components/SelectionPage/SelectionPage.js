@@ -18,12 +18,36 @@ class SelectionPage extends Component {
       currentScope: '',
    }
 
+   // Function handles URL path
+   goToVisualizer = (payload) => {
+      let { currentScope } = payload;
+      let { stateValue, districtValue, schoolValue, datasetValue, datasetYearValue } = payload.scopeInfo;
+
+      // Define scope as a variable scopeIdentity
+      let scopeIdentity;
+      if (currentScope === 'state') {
+         scopeIdentity = stateValue;
+      } else if (currentScope === 'district') {
+         scopeIdentity = districtValue;
+      } else if (currentScope === 'school') {
+         scopeIdentity = schoolValue;
+      }
+
+      // Convert datasetValue into a string with underscores
+      let datasetValueArray = datasetValue.split(' ');
+      let datasetValueMod = datasetValueArray.join('_');
+      // Save url into a string
+      let urlString = `/visualizer/${currentScope}/${scopeIdentity}/${datasetValueMod}/${datasetYearValue}`;
+      // Push urlString onto history stack
+      this.props.history.push(urlString);
+   }
+
    handleSubmit = () => {
       const { stateValue, districtValue, schoolValue, datasetValue, datasetYearValue, currentScope } = this.state;
       const scopeInfo = { stateValue, districtValue, schoolValue, datasetValue, datasetYearValue };
       const payload = { currentScope, scopeInfo };
       this.props.dispatch({ type: 'GET_SPECIFIC_DATASET', payload: payload });
-      this.props.history.push('/visualizer');
+      this.goToVisualizer(payload)
    }
 
    // Loads list of states after component mounts
