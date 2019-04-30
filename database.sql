@@ -1,9 +1,9 @@
 -- CREATE DATABASE "CRDV"
 
 CREATE TABLE "user" (
-  "id" SERIAL PRIMARY KEY,
-  "username" VARCHAR (80) UNIQUE NOT NULL,
-  "password" VARCHAR (1000) NOT NULL
+  "id" serial PRIMARY KEY,
+  "username" varchar UNIQUE,
+  "password" varchar
 );
 
 CREATE TABLE "user_bookmark" (
@@ -17,10 +17,10 @@ CREATE TABLE "user_bookmark" (
 
 CREATE TABLE "school" (
   "id" serial PRIMARY KEY,
+  "state_ref" varchar,
   "school_name" varchar,
   "NCES_school_id" bigint UNIQUE,
-  "LEA_ref" bigint,
-  "state_ref" varchar
+  "LEA_ref" bigint
 );
 
 CREATE TABLE "LEA" (
@@ -41,7 +41,6 @@ CREATE TABLE "Discipline of Students without Disabilities" (
   "school_id" bigint,
   "Year" integer,
   "Category" varchar,
-  "Sex" varchar,
   "Instances" varchar,
   "American Indian or Alaska Native" integer,
   "Asian" integer,
@@ -51,6 +50,41 @@ CREATE TABLE "Discipline of Students without Disabilities" (
   "White" integer,
   "Two or more races" integer,
   "Total" integer,
+  "LEP" integer
+);
+
+CREATE TABLE "Discipline of Students with Disabilities" (
+  "id" serial PRIMARY KEY,
+  "school_id" bigint,
+  "Year" integer,
+  "Category" varchar,
+  "Instances" varchar,
+  "American Indian or Alaska Native" integer,
+  "Asian" integer,
+  "Hawaiian/ Pacific Islander" integer,
+  "Hispanic" integer,
+  "Black" integer,
+  "White" integer,
+  "Two or more races" integer,
+  "Total" integer,
+  "LEP" integer
+);
+
+CREATE TABLE "Took SAT or ACT" (
+  "id" serial PRIMARY KEY,
+  "school_id" bigint,
+  "Year" integer,
+  "Category" varchar,
+  "Sex" varchar,
+  "American Indian or Alaska Native" integer,
+  "Asian" integer,
+  "Hawaiian/ Pacific Islander" integer,
+  "Hispanic" integer,
+  "Black" integer,
+  "White" integer,
+  "Two or more races" integer,
+  "Total" integer,
+  "SWD (IDEA_Eligible)" varchar,
   "LEP" integer
 );
 
@@ -69,3 +103,7 @@ ALTER TABLE "school" ADD FOREIGN KEY ("LEA_ref") REFERENCES "LEA" ("NCES_distric
 ALTER TABLE "Discipline of Students without Disabilities" ADD FOREIGN KEY ("school_id") REFERENCES "school" ("NCES_school_id");
 
 ALTER TABLE "user_bookmark" ADD FOREIGN KEY ("LEA_ref") REFERENCES "LEA" ("NCES_district_id");
+
+ALTER TABLE "Discipline of Students with Disabilities" ADD FOREIGN KEY ("school_id") REFERENCES "school" ("NCES_school_id");
+
+ALTER TABLE "Took SAT or ACT" ADD FOREIGN KEY ("school_id") REFERENCES "school" ("NCES_school_id");
