@@ -48,31 +48,54 @@ router.get('/dataset/:scope/:scopeSelector', (req, res) => {
    let scope = req.params.scope;
    let scopeSelector = req.params.scopeSelector;
 
-   let action =
+   let firstAction =
       `SELECT DISTINCT TABLE_NAME
       FROM INFORMATION_SCHEMA.COLUMNS
       WHERE COLUMN_NAME = 'school_id';`;
 
-   pool.query(action)
+   pool.query(firstAction)
       .then(async (response) => {
          let datasetList = response.rows;
          let datasetListArray = [];
          for (let i = 0; i < datasetList.length; i++) {
-            // console.log(datasetList[i].table_name);
             const table = datasetList[i].table_name;
-            let action =
-               `SELECT DISTINCT TABLE_NAME,
+            let secondAction = '';
+            if (scope === 'state') {
+               secondAction =
+                  `SELECT DISTINCT "table_name", "state_ref", "Year" FROM INFORMATION_SCHEMA.COLUMNS
+                     CROSS JOIN "${table}"
+                     INNER JOIN "school" ON "school"."NCES_school_id" =
+                        "${table}"."school_id"
+                     INNER JOIN "state" ON "school"."state_ref" = "state"."state"
+                     WHERE TABLE_NAME = '${table}'
+                     AND "state_ref" = $1;`;
+            } else if (scope === 'district') {
+               secondAction =
+                  `SELECT DISTINCT TABLE_NAME,
+                     left("school_id"::text, 7) AS "LEA_ref",
+                     "${table}"."Year"
+                  FROM INFORMATION_SCHEMA.COLUMNS, "${table}"
+                     WHERE TABLE_NAME = '${table}'
+                     AND left("school_id"::text, 7) = $1::text;`;
+            } else if (scope === 'school') {
+               secondAction =
+                  `SELECT DISTINCT TABLE_NAME,
                   "${table}"."school_id",
                   "${table}"."Year"
-               FROM INFORMATION_SCHEMA.COLUMNS
-               CROSS JOIN "${table}"
-	            WHERE TABLE_NAME = '${table}'
-                  AND "school_id" = $1;`;
+                  FROM INFORMATION_SCHEMA.COLUMNS
+                  CROSS JOIN "${table}"
+                  WHERE TABLE_NAME = '${table}'
+                     AND "school_id" = $1;`;
+            }
 
-            await pool.query(action, [scopeSelector])
+            await pool.query(secondAction, [scopeSelector])
                .then((response) => {
                   datasetListArray.push(...response.rows);
-               });
+               })
+               .catch((error) => {
+                  console.log('error referencing database:', error);
+                  res.sendStatus(500);
+               })
          }
          res.send(datasetListArray);
       }).catch(() => {
@@ -86,8 +109,9 @@ router.get('/scope/:scope/:scopeSelector/:dataset/:year', async (req, res) => {
    let scopeSelector = req.params.scopeSelector;
    let datasetName = req.params.dataset;
    let year = req.params.year;
+   let action = '';
 
-   // Fetches a list of datasets
+   // Fetches list of valid datasets
    let verifiedDataset = await pool.query(`
       SELECT DISTINCT TABLE_NAME
       FROM INFORMATION_SCHEMA.COLUMNS
