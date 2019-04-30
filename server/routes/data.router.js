@@ -80,7 +80,7 @@ router.get('/dataset/:scope/:scopeSelector', (req, res) => {
       });
 });
 
-// GET specific dataset per user request
+// GET specific dataset based on user request
 router.get('/scope/:scope/:scopeSelector/:dataset/:year', async (req, res) => {
    let scope = req.params.scope;
    let scopeSelector = req.params.scopeSelector;
@@ -99,15 +99,42 @@ router.get('/scope/:scope/:scopeSelector/:dataset/:year', async (req, res) => {
 
    // If the datasetName provided by client is valid, then proceed
    if (verifiedDataset.includes(datasetName)) {
+      // Determine database query based on definition of scope
       if (scope === 'state') {
-         // response = yield axios.get(`/api/data/scope/${currentScope}/${districtValue}`);
+         action = `SELECT "Category",
+            SUM("American Indian or Alaska Native") AS "American Indian or Alaska Native",
+            SUM("Asian") AS "Asian",
+            SUM("Hawaiian/ Pacific Islander") AS "Hawaiian/ Pacific Islander",
+            SUM("Hispanic") AS "Hispanic",
+            SUM("Black") AS "Black",
+            SUM("White") AS "White",
+            SUM("Two or more races") AS "Two or more races",
+            SUM("Total") AS "Total",
+            SUM("LEP") AS "LEP"
+            FROM "${datasetName}"
+            JOIN "school" ON "school"."NCES_school_id" = "school_id"
+            WHERE "school"."state_ref" = $1 AND "Year" = $2
+            GROUP BY "Category";`;
       } else if (scope === 'district') {
-         // response = yield axios.get(`/api/data/scope/${currentScope}/${districtValue}`);
+         action = `SELECT "Category",
+            SUM("American Indian or Alaska Native") AS "American Indian or Alaska Native",
+            SUM("Asian") AS "Asian",
+            SUM("Hawaiian/ Pacific Islander") AS "Hawaiian/ Pacific Islander",
+            SUM("Hispanic") AS "Hispanic",
+            SUM("Black") AS "Black",
+            SUM("White") AS "White",
+            SUM("Two or more races") AS "Two or more races",
+            SUM("Total") AS "Total",
+            SUM("LEP") AS "LEP"
+            FROM "${datasetName}"
+            JOIN "school" ON "school"."NCES_school_id" = "school_id"
+            WHERE "school"."LEA_ref" = $1 AND "Year" = $2
+            GROUP BY "Category";`;
       } else if (scope === 'school') {
          action = `SELECT * FROM "${datasetName}"
-         JOIN "school" ON "school"."NCES_school_id" = "school_id"
-         WHERE "school_id" = $1 AND "Year" = $2
-         ORDER BY "school"."school_name";`;
+            JOIN "school" ON "school"."NCES_school_id" = "school_id"
+            WHERE "school_id" = $1 AND "Year" = $2
+            ORDER BY "school"."school_name";`;
       }
 
       pool.query(action, [scopeSelector, year])
@@ -128,4 +155,3 @@ router.post('/', (req, res) => {
 });
 
 module.exports = router;
-
