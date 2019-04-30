@@ -18,10 +18,23 @@ class SelectionPage extends Component {
       currentScope: '',
    }
 
-   // Function handles URL path
+   // Function handles URL pathing
    goToVisualizer = (payload) => {
       let { currentScope } = payload;
-      let { stateValue, districtValue, schoolValue, datasetValue, datasetYearValue } = payload.scopeInfo;
+      let { scopeIdentity, datasetValue, datasetYearValue } = payload.scopeInfo;
+
+      // Convert datasetValue into a string with underscores
+      let datasetValueArray = datasetValue.split(' ');
+      let datasetValueMod = datasetValueArray.join('_');
+      // Save url into a string
+      let urlString = `/visualizer/${currentScope}/${scopeIdentity}/${datasetValueMod}/${datasetYearValue}`;
+      // Push urlString onto history stack
+      this.props.history.push(urlString);
+   }
+
+   // Handles activation of form submission button
+   handleSubmit = () => {
+      const { stateValue, districtValue, schoolValue, datasetValue, datasetYearValue, currentScope } = this.state;
 
       // Define scope as a variable scopeIdentity
       let scopeIdentity;
@@ -33,21 +46,12 @@ class SelectionPage extends Component {
          scopeIdentity = schoolValue;
       }
 
-      // Convert datasetValue into a string with underscores
-      let datasetValueArray = datasetValue.split(' ');
-      let datasetValueMod = datasetValueArray.join('_');
-      // Save url into a string
-      let urlString = `/visualizer/${currentScope}/${scopeIdentity}/${datasetValueMod}/${datasetYearValue}`;
-      // Push urlString onto history stack
-      this.props.history.push(urlString);
-   }
+      // save scope information in object scopeInfo
+      const scopeInfo = { scopeIdentity, datasetValue, datasetYearValue };
 
-   handleSubmit = () => {
-      const { stateValue, districtValue, schoolValue, datasetValue, datasetYearValue, currentScope } = this.state;
-      const scopeInfo = { stateValue, districtValue, schoolValue, datasetValue, datasetYearValue };
+      // Save data in object payload and send as arguement to goToVisualizer
       const payload = { currentScope, scopeInfo };
-      this.props.dispatch({ type: 'GET_SPECIFIC_DATASET', payload: payload });
-      this.goToVisualizer(payload)
+      this.goToVisualizer(payload);
    }
 
    // Loads list of states after component mounts

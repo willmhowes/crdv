@@ -13,10 +13,24 @@ class Visualizer extends Component {
    }
 
    getUrl = () => {
+      // Breaking down URL into an array pathSplit
       const pathSplit = window.location.hash.split('/')
-      // const id = Number(pathSplit[1]);
-      console.log(pathSplit);
-      // this.props.dispatch({ type: 'FETCH_THEME', payload: id });
+
+      // Retrieving scope points from URL
+      const currentScope = String(pathSplit[2]);
+      const scopeIdentity = String(pathSplit[3]);
+      const datasetYearValue = String(pathSplit[5]);
+
+      // Rebuilding dataset name from URL
+      const datasetValueMod = String(pathSplit[4]);
+      const datasetValueArray = datasetValueMod.split('_');
+      const datasetValue = datasetValueArray.join(' ');
+
+      // Combining scope into a saga-ready payload
+      let scopeInfo = { scopeIdentity, datasetValue, datasetYearValue };
+      let payload = { currentScope, scopeInfo };
+
+      this.props.dispatch({ type: 'GET_SPECIFIC_DATASET', payload: payload });
    }
 
    renderGraph = (dataset, i) => {
@@ -103,7 +117,7 @@ class Visualizer extends Component {
          );
       } else {
          return (this.props.dataset.map((datarow, i) =>
-            <div className="Visualizer-div-graph">
+            <div className="Visualizer-div-graph" key={i}>
                {this.renderGraph(datarow, i)}
             </div>
          ));
@@ -117,7 +131,7 @@ class Visualizer extends Component {
                Visualizer
             </Header>
 
-            {/* {this.handleGraphRender()} */}
+            {this.handleGraphRender()}
             <p>{JSON.stringify(this.props.dataset)}</p>
          </section >
       );
