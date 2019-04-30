@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Form, Segment, Header } from 'semantic-ui-react';
 import { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import './SelectionPage.css';
 
 class SelectionPage extends Component {
@@ -17,11 +18,40 @@ class SelectionPage extends Component {
       currentScope: '',
    }
 
+   // Function handles URL pathing
+   goToVisualizer = (payload) => {
+      let { currentScope } = payload;
+      let { scopeIdentity, datasetValue, datasetYearValue } = payload.scopeInfo;
+
+      // Convert datasetValue into a string with underscores
+      let datasetValueArray = datasetValue.split(' ');
+      let datasetValueMod = datasetValueArray.join('_');
+      // Save url into a string
+      let urlString = `/visualizer/${currentScope}/${scopeIdentity}/${datasetValueMod}/${datasetYearValue}`;
+      // Push urlString onto history stack
+      this.props.history.push(urlString);
+   }
+
+   // Handles activation of form submission button
    handleSubmit = () => {
       const { stateValue, districtValue, schoolValue, datasetValue, datasetYearValue, currentScope } = this.state;
-      const scopeInfo = { stateValue, districtValue, schoolValue, datasetValue, datasetYearValue };
+
+      // Define scope as a variable scopeIdentity
+      let scopeIdentity;
+      if (currentScope === 'state') {
+         scopeIdentity = stateValue;
+      } else if (currentScope === 'district') {
+         scopeIdentity = districtValue;
+      } else if (currentScope === 'school') {
+         scopeIdentity = schoolValue;
+      }
+
+      // save scope information in object scopeInfo
+      const scopeInfo = { scopeIdentity, datasetValue, datasetYearValue };
+
+      // Save data in object payload and send as arguement to goToVisualizer
       const payload = { currentScope, scopeInfo };
-      this.props.dispatch({ type: 'GET_SPECIFIC_DATASET', payload: payload });
+      this.goToVisualizer(payload);
    }
 
    // Loads list of states after component mounts
@@ -342,4 +372,4 @@ const mapStateToProps = state => ({
    testData: state.scopeOption.specificDatasetReducer,
 });
 
-export default connect(mapStateToProps)(SelectionPage);
+export default connect(mapStateToProps)(withRouter(SelectionPage));

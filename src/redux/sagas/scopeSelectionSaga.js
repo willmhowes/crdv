@@ -51,15 +51,10 @@ function* fetchDatasetList(action) {
 function* fetchSpecificDataset(action) {
   try {
     let { currentScope, scopeInfo } = action.payload;
-    let { stateValue, districtValue, schoolValue, datasetValue, datasetYearValue } = scopeInfo;
-    let response;
-    if (currentScope === 'state') {
-      response = yield axios.get(`/api/data/scope/${currentScope}/${stateValue}/${datasetValue}/${datasetYearValue}`);
-    } else if (currentScope === 'district') {
-      response = yield axios.get(`/api/data/scope/${currentScope}/${districtValue}/${datasetValue}/${datasetYearValue}`);
-    } else if (currentScope === 'school') {
-      response = yield axios.get(`/api/data/scope/${currentScope}/${schoolValue}/${datasetValue}/${datasetYearValue}`);
-    }
+    let { scopeIdentity, datasetValue, datasetYearValue } = scopeInfo;
+    let response = yield axios.get(`/api/data/scope/${currentScope}/
+      ${scopeIdentity}/${datasetValue}/${datasetYearValue}`);
+
     yield put({ type: 'SET_SPECIFIC_DATASET', payload: response.data });
   } catch (error) {
     console.log('specific dataset GET request failed', error);

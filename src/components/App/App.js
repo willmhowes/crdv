@@ -17,6 +17,7 @@ import AboutPage from '../AboutPage/AboutPage';
 import UserPage from '../UserPage/UserPage';
 import InfoPage from '../InfoPage/InfoPage';
 import SelectionPage from '../SelectionPage/SelectionPage';
+import Visualizer from '../Visualizer/Visualizer';
 
 import './App.css';
 import 'semantic-ui-css/semantic.min.css';
@@ -45,6 +46,10 @@ class App extends Component {
               exact
               path="/selection"
               component={SelectionPage}
+            />
+            <ProtectedRoute
+              path="/visualizer"
+              component={Visualizer}
             />
             {/* For protected routes, the view could show one of several things on the same route.
             Visiting localhost:3000/home will show the UserPage if the user is logged in.
