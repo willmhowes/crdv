@@ -306,22 +306,6 @@ class SelectionPage extends Component {
       }
    }
 
-   handleTESTRender = () => {
-      if (this.props.testData[0] === 'Data') {
-         return (
-            <div>
-               <h4>Data loads here...</h4>
-            </div>
-         );
-      } else {
-         return (
-            <div>
-               {JSON.stringify(this.props.testData)}
-            </div>
-         )
-      }
-   }
-
    render() {
       return (
          <section className="SelectionPage-section">
@@ -354,9 +338,6 @@ class SelectionPage extends Component {
                   </Form.Button>}
 
                </Form>
-            </Segment>
-            <Segment>
-               {this.handleTESTRender()}
             </Segment>
          </section>
       );

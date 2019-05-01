@@ -139,7 +139,6 @@ class Visualizer extends Component {
             </Header>
 
             {this.handleGraphRender()}
-            <p>{JSON.stringify(this.props.dataset)}</p>
          </section >
       );
    }
