@@ -5,6 +5,8 @@ import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import './SelectionPage.css';
 
+import renderStateInput from '../SelectionComponents/StateDropdown';
+
 class SelectionPage extends Component {
 
    state = {
@@ -111,41 +113,6 @@ class SelectionPage extends Component {
       this.setState({
          datasetYearValue: value,
       });
-   }
-
-   // Renders either:
-   // 1. loading dropdown menu
-   // 2. list of states to select
-   renderStateInput = () => {
-      if (this.props.stateList[0] === 'state') {
-         return (
-            <Form.Dropdown
-               search
-               selection
-               disabled
-               options={[{ key: 0, value: null, text: null }]}
-               text="State"
-               label="State"
-               loading
-            />
-         );
-      } else {
-         const stateListOptions = this.props.stateList.map((option, i) => {
-            return { key: i, value: option.state, text: option.state_name }
-         });
-
-         return (
-            <Form.Dropdown
-               search
-               selection
-               placeholder="State"
-               value={this.state.stateValue}
-               onChange={this.handleStateListChange}
-               options={stateListOptions}
-               label="State"
-            />
-         );
-      }
    }
 
    // Renders either:
@@ -313,7 +280,7 @@ class SelectionPage extends Component {
                <Header as='h1'>Select Scope of Data</Header>
                <Form onSubmit={this.handleSubmit}>
                   <Form.Group>
-                     {this.renderStateInput()}
+                     {renderStateInput(this.props, handleStateListChange)}
                      {this.renderDistrictInput()}
                   </Form.Group>
                   {this.renderSchoolInput()}
@@ -346,7 +313,6 @@ class SelectionPage extends Component {
 
 const mapStateToProps = state => ({
    user: state.user,
-   stateList: state.scopeOption.stateReducer,
    districtList: state.scopeOption.districtReducer,
    schoolList: state.scopeOption.schoolReducer,
    datasetList: state.scopeOption.datasetListReducer,
