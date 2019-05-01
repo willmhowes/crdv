@@ -8,6 +8,13 @@ import './Visualizer.css';
 
 class Visualizer extends Component {
 
+   state = {
+      scopeIdentity: null,
+      datasetValue: null,
+      datasetYearValue: null,
+
+   }
+
    componentDidMount = () => {
       this.getUrl();
    }
