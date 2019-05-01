@@ -48,31 +48,54 @@ router.get('/dataset/:scope/:scopeSelector', (req, res) => {
    let scope = req.params.scope;
    let scopeSelector = req.params.scopeSelector;
 
-   let action =
+   let firstAction =
       `SELECT DISTINCT TABLE_NAME
       FROM INFORMATION_SCHEMA.COLUMNS
       WHERE COLUMN_NAME = 'school_id';`;
 
-   pool.query(action)
+   pool.query(firstAction)
       .then(async (response) => {
          let datasetList = response.rows;
          let datasetListArray = [];
          for (let i = 0; i < datasetList.length; i++) {
-            // console.log(datasetList[i].table_name);
             const table = datasetList[i].table_name;
-            let action =
-               `SELECT DISTINCT TABLE_NAME,
+            let secondAction = '';
+            if (scope === 'state') {
+               secondAction =
+                  `SELECT DISTINCT "table_name", "state_ref", "Year" FROM INFORMATION_SCHEMA.COLUMNS
+                     CROSS JOIN "${table}"
+                     INNER JOIN "school" ON "school"."NCES_school_id" =
+                        "${table}"."school_id"
+                     INNER JOIN "state" ON "school"."state_ref" = "state"."state"
+                     WHERE TABLE_NAME = '${table}'
+                     AND "state_ref" = $1;`;
+            } else if (scope === 'district') {
+               secondAction =
+                  `SELECT DISTINCT TABLE_NAME,
+                     left("school_id"::text, 7) AS "LEA_ref",
+                     "${table}"."Year"
+                  FROM INFORMATION_SCHEMA.COLUMNS, "${table}"
+                     WHERE TABLE_NAME = '${table}'
+                     AND left("school_id"::text, 7) = $1::text;`;
+            } else if (scope === 'school') {
+               secondAction =
+                  `SELECT DISTINCT TABLE_NAME,
                   "${table}"."school_id",
                   "${table}"."Year"
-               FROM INFORMATION_SCHEMA.COLUMNS
-               CROSS JOIN "${table}"
-	            WHERE TABLE_NAME = '${table}'
-                  AND "school_id" = $1;`;
+                  FROM INFORMATION_SCHEMA.COLUMNS
+                  CROSS JOIN "${table}"
+                  WHERE TABLE_NAME = '${table}'
+                     AND "school_id" = $1;`;
+            }
 
-            await pool.query(action, [scopeSelector])
+            await pool.query(secondAction, [scopeSelector])
                .then((response) => {
                   datasetListArray.push(...response.rows);
-               });
+               })
+               .catch((error) => {
+                  console.log('error referencing database:', error);
+                  res.sendStatus(500);
+               })
          }
          res.send(datasetListArray);
       }).catch(() => {
@@ -80,14 +103,15 @@ router.get('/dataset/:scope/:scopeSelector', (req, res) => {
       });
 });
 
-// GET specific dataset per user request
+// GET specific dataset based on user request
 router.get('/scope/:scope/:scopeSelector/:dataset/:year', async (req, res) => {
    let scope = req.params.scope;
    let scopeSelector = req.params.scopeSelector;
    let datasetName = req.params.dataset;
    let year = req.params.year;
+   let action = '';
 
-   // Fetches a list of datasets
+   // Fetches list of valid datasets
    let verifiedDataset = await pool.query(`
       SELECT DISTINCT TABLE_NAME
       FROM INFORMATION_SCHEMA.COLUMNS
@@ -99,15 +123,42 @@ router.get('/scope/:scope/:scopeSelector/:dataset/:year', async (req, res) => {
 
    // If the datasetName provided by client is valid, then proceed
    if (verifiedDataset.includes(datasetName)) {
+      // Determine database query based on definition of scope
       if (scope === 'state') {
-         // response = yield axios.get(`/api/data/scope/${currentScope}/${districtValue}`);
+         action = `SELECT "Category",
+            SUM("American Indian or Alaska Native") AS "American Indian or Alaska Native",
+            SUM("Asian") AS "Asian",
+            SUM("Hawaiian/ Pacific Islander") AS "Hawaiian/ Pacific Islander",
+            SUM("Hispanic") AS "Hispanic",
+            SUM("Black") AS "Black",
+            SUM("White") AS "White",
+            SUM("Two or more races") AS "Two or more races",
+            SUM("Total") AS "Total",
+            SUM("LEP") AS "LEP"
+            FROM "${datasetName}"
+            JOIN "school" ON "school"."NCES_school_id" = "school_id"
+            WHERE "school"."state_ref" = $1 AND "Year" = $2
+            GROUP BY "Category";`;
       } else if (scope === 'district') {
-         // response = yield axios.get(`/api/data/scope/${currentScope}/${districtValue}`);
+         action = `SELECT "Category",
+            SUM("American Indian or Alaska Native") AS "American Indian or Alaska Native",
+            SUM("Asian") AS "Asian",
+            SUM("Hawaiian/ Pacific Islander") AS "Hawaiian/ Pacific Islander",
+            SUM("Hispanic") AS "Hispanic",
+            SUM("Black") AS "Black",
+            SUM("White") AS "White",
+            SUM("Two or more races") AS "Two or more races",
+            SUM("Total") AS "Total",
+            SUM("LEP") AS "LEP"
+            FROM "${datasetName}"
+            JOIN "school" ON "school"."NCES_school_id" = "school_id"
+            WHERE "school"."LEA_ref" = $1 AND "Year" = $2
+            GROUP BY "Category";`;
       } else if (scope === 'school') {
          action = `SELECT * FROM "${datasetName}"
-         JOIN "school" ON "school"."NCES_school_id" = "school_id"
-         WHERE "school_id" = $1 AND "Year" = $2
-         ORDER BY "school"."school_name";`;
+            JOIN "school" ON "school"."NCES_school_id" = "school_id"
+            WHERE "school_id" = $1 AND "Year" = $2
+            ORDER BY "school"."school_name";`;
       }
 
       pool.query(action, [scopeSelector, year])
@@ -128,4 +179,3 @@ router.post('/', (req, res) => {
 });
 
 module.exports = router;
-
