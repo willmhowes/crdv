@@ -6,6 +6,11 @@ import { withRouter } from 'react-router-dom';
 import './SelectionPage.css';
 
 import RenderStateInput from '../SelectionComponents/StateDropdown';
+import RenderDistrictInput from '../SelectionComponents/DistrictDropdown';
+import RenderSchoolInput from '../SelectionComponents/SchoolDropdown';
+import RenderDatasetInput from '../SelectionComponents/DatasetDropdown';
+import RenderDatasetYearInput from '../SelectionComponents/DatasetYearDropdown';
+
 
 class SelectionPage extends Component {
 
@@ -115,181 +120,36 @@ class SelectionPage extends Component {
       });
    }
 
-   // Renders either:
-   // 1. disabled dropdown menu
-   // 2. contextually relevant dropdown of districts in selected state
-   renderDistrictInput = () => {
-      if (this.props.districtList[0] === 'District') {
-         return (
-            <Form.Dropdown
-               search
-               selection
-               disabled
-               options={[{ key: 0, value: null, text: null }]}
-               placeholder="District"
-               label="District"
-            />
-         );
-      } else {
-         const districtListOptions = this.props.districtList.map((option, i) => {
-            return { key: i, value: option.NCES_district_id, text: option.LEA_name }
-         });
-
-         return (
-            <Form.Dropdown
-               search
-               selection
-               placeholder="District"
-               value={this.state.districtValue}
-               onChange={this.handleDistrictListChange}
-               options={districtListOptions}
-               label="District"
-            />
-         );
-      }
-   }
-
-   // Renders either:
-   // 1. disabled dropdown menu
-   // 2. contextually relevant dropdown of schools in selected state
-   renderSchoolInput = () => {
-      if (this.props.schoolList[0] === 'School') {
-         return (
-            <Form.Dropdown
-               search
-               selection
-               disabled
-               fluid
-               options={[{ key: 0, value: null, text: null }]}
-               placeholder="School"
-               label="School"
-            />
-         );
-      } else {
-         const schoolListOptions = this.props.schoolList.map((option, i) => {
-            return { key: i, value: option.NCES_school_id, text: option.school_name }
-         });
-
-         return (
-            <Form.Dropdown
-               search
-               selection
-               fluid
-               placeholder="School"
-               value={this.state.schoolValue}
-               onChange={this.handleSchoolListChange}
-               options={schoolListOptions}
-               label="School"
-            />
-         );
-      }
-   }
-
-   // Renders either:
-   // 1. disabled dropdown menu
-   // 2. dropdown of available datasets in selected scope
-   renderDatasetInput = () => {
-      if (!this.state.allowContinue) {
-         return (
-            <Form.Dropdown
-               search
-               selection
-               disabled
-               fluid
-               options={[{ key: 0, value: null, text: null }]}
-               placeholder="Dataset"
-               label="Dataset"
-            />
-         );
-      } else {
-         const datasetOptions = [];
-         const dataSetList = this.props.datasetList;
-         const distinctList = [...new Set(dataSetList.map(x => x.table_name))];
-
-         for (let i in distinctList) {
-            datasetOptions.push({
-               key: i + 1,
-               value: distinctList[i],
-               text: distinctList[i],
-            });
-         }
-
-         return (
-            <Form.Dropdown
-               search
-               selection
-               fluid
-               placeholder="Dataset"
-               value={this.state.datasetValue}
-               onChange={this.handleDatasetListChange}
-               options={datasetOptions}
-               label="Dataset"
-            />
-         );
-      }
-   }
-
-   // Renders either:
-   // 1. disabled dropdown menu
-   // 2. dropdown of available years matching the selected dataset
-   renderDatasetYearInput = () => {
-      if (!this.state.showYearSelection) {
-         return (
-            <Form.Dropdown
-               search
-               selection
-               fluid
-               disabled
-               options={[{ key: 0, value: null, text: null }]}
-               placeholder="Year"
-               label="Year"
-            />
-         );
-      } else {
-         const datasetYearOptions = [];
-         const dataSetList = this.props.datasetList;
-         for (let i in dataSetList) {
-            if (dataSetList[i].table_name === this.state.datasetValue) {
-               datasetYearOptions.push({
-                  key: i + 1,
-                  value: dataSetList[i].Year,
-                  text: dataSetList[i].Year,
-               });
-            }
-         }
-
-         return (
-            <Form.Dropdown
-               search
-               selection
-               fluid
-               placeholder="Year"
-               value={this.state.datasetYearValue}
-               onChange={this.handleDatasetYearListChange}
-               options={datasetYearOptions}
-               label="Year"
-            />
-         );
-      }
-   }
-
    render() {
       return (
          <section className="SelectionPage-section">
             <Segment>
                <Header as='h1'>Select Scope of Data</Header>
+
                <Form onSubmit={this.handleSubmit}>
                   <Form.Group>
                      <RenderStateInput
                         stateValue={this.state.stateValue}
-                        handleStateListChange={this.handleStateListChange}
-                     />
-                     {this.renderDistrictInput()}
+                        handleStateListChange={this.handleStateListChange}/>
+                     <RenderDistrictInput
+                        districtValue={this.state.districtValue}
+                        handleDistrictListChange={this.handleDistrictListChange}/>
                   </Form.Group>
-                  {this.renderSchoolInput()}
+
+                  <RenderSchoolInput
+                     schoolValue={this.state.schoolValue}
+                     handleSchoolListChange={this.handleSchoolListChange}/>
+
                   <Form.Group widths="equal">
-                     {this.renderDatasetInput()}
-                     {this.renderDatasetYearInput()}
+                     <RenderDatasetInput
+                        datasetValue={this.state.datasetValue}
+                        handleDatasetListChange={this.handleDatasetListChange}
+                        allowContinue={this.state.allowContinue}/>
+                     <RenderDatasetYearInput
+                        datasetYearValue={this.state.datasetYearValue}
+                        handleDatasetYearListChange={this.handleDatasetYearListChange}
+                        showYearSelection={this.state.showYearSelection}
+                        datasetValue={this.state.datasetValue}/>
                   </Form.Group>
 
                   {this.state.allowContinue ?
@@ -316,10 +176,6 @@ class SelectionPage extends Component {
 
 const mapStateToProps = state => ({
    user: state.user,
-   districtList: state.scopeOption.districtReducer,
-   schoolList: state.scopeOption.schoolReducer,
-   datasetList: state.scopeOption.datasetListReducer,
-   testData: state.scopeOption.specificDatasetReducer,
 });
 
 export default connect(mapStateToProps)(withRouter(SelectionPage));
