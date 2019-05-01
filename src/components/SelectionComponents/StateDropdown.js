@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Form } from "semantic-ui-react";
 
-
 // Renders either:
 // 1. loading dropdown menu
 // 2. list of states to select
