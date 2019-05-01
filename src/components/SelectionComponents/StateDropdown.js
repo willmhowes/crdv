@@ -1,9 +1,13 @@
-import { Form } from "react-chartjs-2";
+import React from 'react';
+import { connect } from 'react-redux';
+import { Form } from "semantic-ui-react";
+
 
 // Renders either:
 // 1. loading dropdown menu
 // 2. list of states to select
-renderStateInput = (props, handleStateListChange) => {
+const renderStateInput = props => {
+   console.log(props);
    if (props.stateList[0] === 'state') {
       return (
          <Form.Dropdown
@@ -26,8 +30,8 @@ renderStateInput = (props, handleStateListChange) => {
             search
             selection
             placeholder="State"
-            value={this.state.stateValue}
-            onChange={handleStateListChange}
+            value={props.stateValue}
+            onChange={props.handleStateListChange}
             options={stateListOptions}
             label="State"
          />

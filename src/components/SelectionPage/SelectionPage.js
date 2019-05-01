@@ -5,7 +5,7 @@ import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import './SelectionPage.css';
 
-import renderStateInput from '../SelectionComponents/StateDropdown';
+import RenderStateInput from '../SelectionComponents/StateDropdown';
 
 class SelectionPage extends Component {
 
@@ -280,7 +280,10 @@ class SelectionPage extends Component {
                <Header as='h1'>Select Scope of Data</Header>
                <Form onSubmit={this.handleSubmit}>
                   <Form.Group>
-                     {renderStateInput(this.props, handleStateListChange)}
+                     <RenderStateInput
+                        stateValue={this.state.stateValue}
+                        handleStateListChange={this.handleStateListChange}
+                     />
                      {this.renderDistrictInput()}
                   </Form.Group>
                   {this.renderSchoolInput()}
