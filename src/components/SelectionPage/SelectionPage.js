@@ -15,7 +15,6 @@ import RenderDatasetYearInput from '../SelectionComponents/DatasetYearDropdown';
 class SelectionPage extends Component {
 
    state = {
-      stateValue: '',
       districtValue: '',
       schoolValue: '',
       datasetValue: '',
@@ -41,7 +40,8 @@ class SelectionPage extends Component {
 
    // Handles activation of form submission button
    handleSubmit = () => {
-      const { stateValue, districtValue, schoolValue, datasetValue, datasetYearValue, currentScope } = this.state;
+      const { districtValue, schoolValue, datasetValue, datasetYearValue, currentScope } = this.state;
+      const { stateValue } = this.props;
 
       // Define scope as a variable scopeIdentity
       let scopeIdentity;
@@ -70,8 +70,9 @@ class SelectionPage extends Component {
    // then dispatches request for list of relevant districts
    handleStateListChange = (event, { value }) => {
       this.props.dispatch({ type: 'GET_DISTRICT_LIST', payload: value });
+      this.props.dispatch({ type: 'SET_SCOPE_OF_STATE', payload: value });
+
       this.setState({
-         stateValue: value,
          currentScope: 'state'
       });
    }
@@ -129,7 +130,7 @@ class SelectionPage extends Component {
                <Form onSubmit={this.handleSubmit}>
                   <Form.Group>
                      <RenderStateInput
-                        stateValue={this.state.stateValue}
+                        stateValue={this.props.stateValue}
                         handleStateListChange={this.handleStateListChange}
                         isRequired={true}/>
                      <RenderDistrictInput
@@ -177,6 +178,7 @@ class SelectionPage extends Component {
 
 const mapStateToProps = state => ({
    user: state.user,
+   stateValue: state.selectedScope.scopeStateReducer,
 });
 
 export default connect(mapStateToProps)(withRouter(SelectionPage));

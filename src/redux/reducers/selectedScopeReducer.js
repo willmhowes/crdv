@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-const scopeStateReducer = (state = ['scope_of_state'], action) => {
+const scopeStateReducer = (state = [''], action) => {
    switch (action.type) {
       case 'SET_SCOPE_OF_STATE':
          return action.payload;
