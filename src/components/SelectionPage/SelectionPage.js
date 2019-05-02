@@ -11,7 +11,6 @@ import RenderSchoolInput from '../SelectionComponents/SchoolDropdown';
 import RenderDatasetInput from '../SelectionComponents/DatasetDropdown';
 import RenderDatasetYearInput from '../SelectionComponents/DatasetYearDropdown';
 
-
 class SelectionPage extends Component {
 
    state = {
@@ -105,7 +104,6 @@ class SelectionPage extends Component {
    // updates datasetValue in selectedScopeReducer
    handleDatasetListChange = (event, { value }) => {
       this.props.dispatch({ type: 'SET_SCOPE_OF_DATASET', payload: value });
-
       this.setState({
          showYearSelection: true,
       });
