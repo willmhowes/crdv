@@ -13,11 +13,6 @@ import RenderDatasetYearInput from '../SelectionComponents/DatasetYearDropdown';
 
 class SelectionPage extends Component {
 
-   state = {
-      showYearSelection: false,
-      allowContinue: false,
-   }
-
    // Function handles URL pathing
    goToVisualizer = (payload) => {
       let { currentScope } = payload;
@@ -105,17 +100,13 @@ class SelectionPage extends Component {
    // updates datasetValue in selectedScopeReducer
    handleDatasetListChange = (event, { value }) => {
       this.props.dispatch({ type: 'SET_SCOPE_OF_DATASET', payload: value });
-      this.setState({
-         showYearSelection: true,
-      });
+      this.props.dispatch({ type: 'SET_YEAR_SELECTION_APPEARANCE', payload: true });
    }
 
    // updates datasetYearValue in selectedScopeReducer
    handleDatasetYearListChange = (event, { value }) => {
       this.props.dispatch({ type: 'SET_SCOPE_OF_DATASET_YEAR', payload: value });
-      this.setState({
-         allowContinue: true,
-      });
+      this.props.dispatch({ type: 'SET_CONTINUE_BUTTON_APPEARANCE', payload: true });
    }
 
    render() {
@@ -148,12 +139,12 @@ class SelectionPage extends Component {
                      <RenderDatasetYearInput
                         datasetYearValue={this.props.datasetYearValue}
                         handleDatasetYearListChange={this.handleDatasetYearListChange}
-                        showYearSelection={this.state.showYearSelection}
+                        showYearSelection={this.props.showYearSelection}
                         datasetValue={this.props.datasetValue}
                         isRequired={true} />
                   </Form.Group>
 
-                  {this.state.allowContinue ?
+                  {this.props.allowContinue ?
                      <Form.Button
                         type="submit"
                         primary
@@ -184,6 +175,8 @@ const mapStateToProps = state => ({
    datasetYearValue: state.selectedScope.scopeDatasetYearReducer,
    currentScope: state.selectedScope.scopeCurrentLevelReducer,
    showDatasetSelection: state.selectionMenuProgress.showDatasetSelectionReducer,
+   showYearSelection: state.selectionMenuProgress.showYearSelectionReducer,
+   allowContinue: state.selectionMenuProgress.allowContinueReducer,
 });
 
 export default connect(mapStateToProps)(withRouter(SelectionPage));
