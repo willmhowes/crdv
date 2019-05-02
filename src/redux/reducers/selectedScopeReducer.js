@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-const scopeStateReducer = (state = [''], action) => {
+const scopeStateReducer = (state = '', action) => {
    switch (action.type) {
       case 'SET_SCOPE_OF_STATE':
          return action.payload;
@@ -9,7 +9,7 @@ const scopeStateReducer = (state = [''], action) => {
    }
 };
 
-const scopeDistrictReducer = (state = ['scope_of_district'], action) => {
+const scopeDistrictReducer = (state = '', action) => {
    switch (action.type) {
       case 'SET_SCOPE_OF_DISTRICT':
          return action.payload;
@@ -18,7 +18,7 @@ const scopeDistrictReducer = (state = ['scope_of_district'], action) => {
    }
 };
 
-const scopeSchoolReducer = (state = ['scope_of_school'], action) => {
+const scopeSchoolReducer = (state = '', action) => {
    switch (action.type) {
       case 'SET_SCOPE_OF_SCHOOL':
          return action.payload;
@@ -27,7 +27,7 @@ const scopeSchoolReducer = (state = ['scope_of_school'], action) => {
    }
 };
 
-const scopeDatasetReducer = (state = ['scope_of_dataset'], action) => {
+const scopeDatasetReducer = (state = '', action) => {
    switch (action.type) {
       case 'SET_SCOPE_OF_DATASET':
          return action.payload;
@@ -36,7 +36,7 @@ const scopeDatasetReducer = (state = ['scope_of_dataset'], action) => {
    }
 };
 
-const scopeDatasetYearReducer = (state = ['scope_of_dataset_year'], action) => {
+const scopeDatasetYearReducer = (state = '', action) => {
    switch (action.type) {
       case 'SET_SCOPE_OF_DATASET_YEAR':
          return action.payload;
