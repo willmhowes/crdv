@@ -1,21 +1,25 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Form } from "semantic-ui-react";
+import { Form, Dropdown } from "semantic-ui-react";
 
 // Renders either:
 // 1. loading dropdown menu
 // 2. list of states to select
 const renderStateInput = props => {
-   console.log(props);
    if (props.stateList[0] === 'state') {
+      /* Slightly different syntax than other Selection components
+      in order to specify that the dropdown is 'required' */
       return (
-         <Form.Dropdown
+         <Form.Field
+            control={Dropdown}
+            // Checks if property isRequired was passed as true
+            required={!!props.isRequired}
             search
             selection
-            disabled
             options={[{ key: 0, value: null, text: null }]}
-            text="State"
+            placeholder="State"
             label="State"
+            disabled
             loading
          />
       );
@@ -24,8 +28,13 @@ const renderStateInput = props => {
          return { key: i, value: option.state, text: option.state_name }
       });
 
+      /* Slightly different syntax than other Selection components
+      in order to specify that the dropdown is 'required' */
       return (
-         <Form.Dropdown
+         <Form.Field
+            control={Dropdown}
+            // Checks if property isRequired was passed as true
+            required={!!props.isRequired}
             search
             selection
             placeholder="State"

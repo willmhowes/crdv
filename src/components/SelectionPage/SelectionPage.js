@@ -130,7 +130,8 @@ class SelectionPage extends Component {
                   <Form.Group>
                      <RenderStateInput
                         stateValue={this.state.stateValue}
-                        handleStateListChange={this.handleStateListChange}/>
+                        handleStateListChange={this.handleStateListChange}
+                        isRequired={true}/>
                      <RenderDistrictInput
                         districtValue={this.state.districtValue}
                         handleDistrictListChange={this.handleDistrictListChange}/>
