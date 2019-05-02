@@ -15,10 +15,6 @@ import RenderDatasetYearInput from '../SelectionComponents/DatasetYearDropdown';
 class SelectionPage extends Component {
 
    state = {
-      districtValue: '',
-      schoolValue: '',
-      datasetValue: '',
-      datasetYearValue: '',
       allowContinue: false,
       showYearSelection: false,
       currentScope: '',
@@ -40,8 +36,8 @@ class SelectionPage extends Component {
 
    // Handles activation of form submission button
    handleSubmit = () => {
-      const { districtValue, schoolValue, datasetValue, datasetYearValue, currentScope } = this.state;
-      const { stateValue } = this.props;
+      const { currentScope } = this.state;
+      const { stateValue, districtValue, schoolValue, datasetValue, datasetYearValue } = this.props;
 
       // Define scope as a variable scopeIdentity
       let scopeIdentity;
@@ -66,7 +62,7 @@ class SelectionPage extends Component {
       this.props.dispatch({ type: 'GET_STATE_LIST' });
    }
 
-   // updates stateValue and scope in local state
+   // updates stateValue in selectedScopeReducer, currentScope in local state
    // then dispatches request for list of relevant districts
    handleStateListChange = (event, { value }) => {
       this.props.dispatch({ type: 'GET_DISTRICT_LIST', payload: value });
@@ -77,48 +73,48 @@ class SelectionPage extends Component {
       });
    }
 
-   // updates districtValue and scope in local state
+   // updates districtValue in selectedScopeReducer, currentScope in local state
    // then dispatches request for list of relevant schools
    handleDistrictListChange = (event, { value }) => {
       this.props.dispatch({ type: 'GET_SCHOOL_LIST', payload: value });
+      this.props.dispatch({ type: 'SET_SCOPE_OF_DISTRICT', payload: value });
+
       this.setState({
-         districtValue: value,
          currentScope: 'district'
       });
    }
 
-   // updates schoolValue and scope in local state
+   // updates schoolValue in selectedScopeReducer, currentScope in local state
    // then dispatches request for list of relevant datasets
    handleSchoolListChange = (event, { value }) => {
       // destructures everything except schoolValue and currentScope
       // schoolValue is passed as the prop 'value'
       // currentScope isn't set until setState, which is after the dispatch
-      const { stateValue, districtValue } = this.state;
+      const { stateValue, districtValue } = this.props;
       const scopeInfo = { stateValue, districtValue, schoolValue: value };
       const currentScope = 'school';
       const payload = { currentScope, scopeInfo };
       this.props.dispatch({ type: 'GET_DATASET_LIST', payload: payload });
+      this.props.dispatch({ type: 'SET_SCOPE_OF_SCHOOL', payload: value });
 
       this.setState({
-         schoolValue: value,
          currentScope: 'school',
          allowContinue: true,
       });
    }
 
-   // updates datasetValue in local state
+   // updates datasetValue in selectedScopeReducer
    handleDatasetListChange = (event, { value }) => {
+      this.props.dispatch({ type: 'SET_SCOPE_OF_DATASET', payload: value });
+
       this.setState({
-         datasetValue: value,
          showYearSelection: true,
       });
    }
 
-   // updates datasetYearValue in local state
+   // updates datasetYearValue in selectedScopeReducer
    handleDatasetYearListChange = (event, { value }) => {
-      this.setState({
-         datasetYearValue: value,
-      });
+      this.props.dispatch({ type: 'SET_SCOPE_OF_DATASET_YEAR', payload: value });
    }
 
    render() {
@@ -134,24 +130,24 @@ class SelectionPage extends Component {
                         handleStateListChange={this.handleStateListChange}
                         isRequired={true}/>
                      <RenderDistrictInput
-                        districtValue={this.state.districtValue}
+                        districtValue={this.props.districtValue}
                         handleDistrictListChange={this.handleDistrictListChange}/>
                   </Form.Group>
 
                   <RenderSchoolInput
-                     schoolValue={this.state.schoolValue}
+                     schoolValue={this.props.schoolValue}
                      handleSchoolListChange={this.handleSchoolListChange}/>
 
                   <Form.Group widths="equal">
                      <RenderDatasetInput
-                        datasetValue={this.state.datasetValue}
+                        datasetValue={this.props.datasetValue}
                         handleDatasetListChange={this.handleDatasetListChange}
                         allowContinue={this.state.allowContinue}/>
                      <RenderDatasetYearInput
-                        datasetYearValue={this.state.datasetYearValue}
+                        datasetYearValue={this.props.datasetYearValue}
                         handleDatasetYearListChange={this.handleDatasetYearListChange}
                         showYearSelection={this.state.showYearSelection}
-                        datasetValue={this.state.datasetValue}/>
+                        datasetValue={this.props.datasetValue}/>
                   </Form.Group>
 
                   {this.state.allowContinue ?
@@ -179,6 +175,10 @@ class SelectionPage extends Component {
 const mapStateToProps = state => ({
    user: state.user,
    stateValue: state.selectedScope.scopeStateReducer,
+   districtValue: state.selectedScope.scopeDistrictReducer,
+   schoolValue: state.selectedScope.scopeSchoolReducer,
+   datasetValue: state.selectedScope.scopeDatasetReducer,
+   datasetYearValue: state.selectedScope.scopeDatasetYearReducer,
 });
 
 export default connect(mapStateToProps)(withRouter(SelectionPage));
