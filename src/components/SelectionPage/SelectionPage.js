@@ -61,19 +61,6 @@ class SelectionPage extends Component {
       this.props.dispatch({ type: 'GET_STATE_LIST' });
    }
 
-   // updates stateValue in selectedScopeReducer, currentScope in local state
-   // then dispatches request for list of relevant districts
-   handleStateListChange = (event, { value }) => {
-      const scopeInfo = value;
-      const currentScope = 'state';
-      const payload = { currentScope, scopeInfo };
-      this.props.dispatch({ type: 'GET_DATASET_LIST', payload: payload });
-      this.props.dispatch({ type: 'GET_DISTRICT_LIST', payload: value });
-      this.props.dispatch({ type: 'SET_SCOPE_OF_STATE', payload: value });
-      this.props.dispatch({ type: 'SET_CURRENT_LEVEL_OF_SCOPE', payload: 'state' });
-      this.props.dispatch({ type: 'SET_DATASET_SELECTION_APPEARANCE', payload: true });
-   }
-
    // updates districtValue in selectedScopeReducer, currentScope in local state
    // then dispatches request for list of relevant schools
    handleDistrictListChange = (event, { value }) => {
@@ -117,10 +104,7 @@ class SelectionPage extends Component {
 
                <Form onSubmit={this.handleSubmit}>
                   <Form.Group>
-                     <RenderStateInput
-                        stateValue={this.props.stateValue}
-                        handleStateListChange={this.handleStateListChange}
-                        isRequired={true} />
+                     <RenderStateInput isRequired={true} />
                      <RenderDistrictInput
                         districtValue={this.props.districtValue}
                         handleDistrictListChange={this.handleDistrictListChange} />
