@@ -17,7 +17,6 @@ class SelectionPage extends Component {
    state = {
       allowContinue: false,
       showYearSelection: false,
-      currentScope: '',
    }
 
    // Function handles URL pathing
@@ -36,8 +35,14 @@ class SelectionPage extends Component {
 
    // Handles activation of form submission button
    handleSubmit = () => {
-      const { currentScope } = this.state;
-      const { stateValue, districtValue, schoolValue, datasetValue, datasetYearValue } = this.props;
+      const {
+         stateValue,
+         districtValue,
+         schoolValue,
+         datasetValue,
+         datasetYearValue,
+         currentScope
+      } = this.props;
 
       // Define scope as a variable scopeIdentity
       let scopeIdentity;
@@ -67,10 +72,7 @@ class SelectionPage extends Component {
    handleStateListChange = (event, { value }) => {
       this.props.dispatch({ type: 'GET_DISTRICT_LIST', payload: value });
       this.props.dispatch({ type: 'SET_SCOPE_OF_STATE', payload: value });
-
-      this.setState({
-         currentScope: 'state'
-      });
+      this.props.dispatch({ type: 'SET_CURRENT_LEVEL_OF_SCOPE', payload: 'state' });
    }
 
    // updates districtValue in selectedScopeReducer, currentScope in local state
@@ -78,10 +80,7 @@ class SelectionPage extends Component {
    handleDistrictListChange = (event, { value }) => {
       this.props.dispatch({ type: 'GET_SCHOOL_LIST', payload: value });
       this.props.dispatch({ type: 'SET_SCOPE_OF_DISTRICT', payload: value });
-
-      this.setState({
-         currentScope: 'district'
-      });
+      this.props.dispatch({ type: 'SET_CURRENT_LEVEL_OF_SCOPE', payload: 'district' });
    }
 
    // updates schoolValue in selectedScopeReducer, currentScope in local state
@@ -96,9 +95,9 @@ class SelectionPage extends Component {
       const payload = { currentScope, scopeInfo };
       this.props.dispatch({ type: 'GET_DATASET_LIST', payload: payload });
       this.props.dispatch({ type: 'SET_SCOPE_OF_SCHOOL', payload: value });
+      this.props.dispatch({ type: 'SET_CURRENT_LEVEL_OF_SCOPE', payload: 'school' });
 
       this.setState({
-         currentScope: 'school',
          allowContinue: true,
       });
    }
@@ -179,6 +178,7 @@ const mapStateToProps = state => ({
    schoolValue: state.selectedScope.scopeSchoolReducer,
    datasetValue: state.selectedScope.scopeDatasetReducer,
    datasetYearValue: state.selectedScope.scopeDatasetYearReducer,
+   currentScope: state.selectedScope.scopeCurrentLevelReducer,
 });
 
 export default connect(mapStateToProps)(withRouter(SelectionPage));

@@ -45,12 +45,22 @@ const scopeDatasetYearReducer = (state = '', action) => {
    }
 };
 
+const scopeCurrentLevelReducer = (state = '', action) => {
+   switch (action.type) {
+      case 'SET_CURRENT_LEVEL_OF_SCOPE':
+         return action.payload;
+      default:
+         return state;
+   }
+};
+
 const rootReducer = combineReducers({
    scopeStateReducer,
    scopeDistrictReducer,
    scopeSchoolReducer,
    scopeDatasetReducer,
    scopeDatasetYearReducer,
+   scopeCurrentLevelReducer,
 });
 
 export default rootReducer;
