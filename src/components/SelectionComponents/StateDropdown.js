@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Form, Dropdown } from "semantic-ui-react";
 
-
 class StateDropdown extends Component {
 
    // updates stateValue in selectedScopeReducer, currentScope in local state

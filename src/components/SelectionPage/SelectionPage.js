@@ -61,29 +61,6 @@ class SelectionPage extends Component {
       this.props.dispatch({ type: 'GET_STATE_LIST' });
    }
 
-   // updates districtValue in selectedScopeReducer, currentScope in local state
-   // then dispatches request for list of relevant schools
-   handleDistrictListChange = (event, { value }) => {
-      const scopeInfo = value;
-      const currentScope = 'district';
-      const payload = { currentScope, scopeInfo };
-      this.props.dispatch({ type: 'GET_DATASET_LIST', payload: payload });
-      this.props.dispatch({ type: 'GET_SCHOOL_LIST', payload: value });
-      this.props.dispatch({ type: 'SET_SCOPE_OF_DISTRICT', payload: value });
-      this.props.dispatch({ type: 'SET_CURRENT_LEVEL_OF_SCOPE', payload: 'district' });
-   }
-
-   // updates schoolValue in selectedScopeReducer, currentScope in local state
-   // then dispatches request for list of relevant datasets
-   handleSchoolListChange = (event, { value }) => {
-      const scopeInfo = value;
-      const currentScope = 'school';
-      const payload = { currentScope, scopeInfo };
-      this.props.dispatch({ type: 'GET_DATASET_LIST', payload: payload });
-      this.props.dispatch({ type: 'SET_SCOPE_OF_SCHOOL', payload: value });
-      this.props.dispatch({ type: 'SET_CURRENT_LEVEL_OF_SCOPE', payload: 'school' });
-   }
-
    // updates datasetValue in selectedScopeReducer
    handleDatasetListChange = (event, { value }) => {
       this.props.dispatch({ type: 'SET_SCOPE_OF_DATASET', payload: value });
@@ -105,14 +82,10 @@ class SelectionPage extends Component {
                <Form onSubmit={this.handleSubmit}>
                   <Form.Group>
                      <RenderStateInput isRequired={true} />
-                     <RenderDistrictInput
-                        districtValue={this.props.districtValue}
-                        handleDistrictListChange={this.handleDistrictListChange} />
+                     <RenderDistrictInput />
                   </Form.Group>
 
-                  <RenderSchoolInput
-                     schoolValue={this.props.schoolValue}
-                     handleSchoolListChange={this.handleSchoolListChange} />
+                  <RenderSchoolInput />
 
                   <Form.Group widths="equal">
                      <RenderDatasetInput
