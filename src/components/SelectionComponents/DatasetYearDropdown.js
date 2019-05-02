@@ -10,6 +10,7 @@ const renderDatasetYearInput = props => {
       return (
          <Form.Field
             control={Dropdown}
+            // Checks if property isRequired was passed as true
             required={!!props.isRequired}
             search
             selection
@@ -36,6 +37,7 @@ const renderDatasetYearInput = props => {
       return (
          <Form.Field
             control={Dropdown}
+            // Checks if property isRequired was passed as true
             required={!!props.isRequired}
             search
             selection

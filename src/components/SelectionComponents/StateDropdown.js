@@ -7,8 +7,6 @@ import { Form, Dropdown } from "semantic-ui-react";
 // 2. list of states to select
 const renderStateInput = props => {
    if (props.stateList[0] === 'state') {
-      /* Slightly different syntax than other Selection components
-      in order to specify that the dropdown is 'required' */
       return (
          <Form.Field
             control={Dropdown}
@@ -28,8 +26,6 @@ const renderStateInput = props => {
          return { key: i, value: option.state, text: option.state_name }
       });
 
-      /* Slightly different syntax than other Selection components
-      in order to specify that the dropdown is 'required' */
       return (
          <Form.Field
             control={Dropdown}
