@@ -14,7 +14,6 @@ import RenderDatasetYearInput from '../SelectionComponents/DatasetYearDropdown';
 class SelectionPage extends Component {
 
    state = {
-      showDatasetSelection: false,
       showYearSelection: false,
       allowContinue: false,
    }
@@ -77,10 +76,7 @@ class SelectionPage extends Component {
       this.props.dispatch({ type: 'GET_DISTRICT_LIST', payload: value });
       this.props.dispatch({ type: 'SET_SCOPE_OF_STATE', payload: value });
       this.props.dispatch({ type: 'SET_CURRENT_LEVEL_OF_SCOPE', payload: 'state' });
-
-      this.setState({
-         showDatasetSelection: true,
-      });
+      this.props.dispatch({ type: 'SET_DATASET_SELECTION_APPEARANCE', payload: true });
    }
 
    // updates districtValue in selectedScopeReducer, currentScope in local state
@@ -147,7 +143,7 @@ class SelectionPage extends Component {
                      <RenderDatasetInput
                         datasetValue={this.props.datasetValue}
                         handleDatasetListChange={this.handleDatasetListChange}
-                        showDatasetSelection={this.state.showDatasetSelection}
+                        showDatasetSelection={this.props.showDatasetSelection}
                         isRequired={true} />
                      <RenderDatasetYearInput
                         datasetYearValue={this.props.datasetYearValue}
@@ -187,6 +183,7 @@ const mapStateToProps = state => ({
    datasetValue: state.selectedScope.scopeDatasetReducer,
    datasetYearValue: state.selectedScope.scopeDatasetYearReducer,
    currentScope: state.selectedScope.scopeCurrentLevelReducer,
+   showDatasetSelection: state.selectionMenuProgress.showDatasetSelectionReducer,
 });
 
 export default connect(mapStateToProps)(withRouter(SelectionPage));
