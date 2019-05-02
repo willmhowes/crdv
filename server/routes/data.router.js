@@ -116,7 +116,10 @@ router.get('/scope/:scope/:scopeSelector/:dataset/:year', async (req, res) => {
       SELECT DISTINCT TABLE_NAME
       FROM INFORMATION_SCHEMA.COLUMNS
       WHERE COLUMN_NAME = 'school_id';
-   `);
+   `).catch((error) => {
+      res.sendStatus(500);
+      console.log(error);
+   });
 
    // Converts response into an array of dataset names
    verifiedDataset = verifiedDataset.rows.map(x => x.table_name);

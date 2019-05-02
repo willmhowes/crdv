@@ -52,8 +52,9 @@ function* fetchSpecificDataset(action) {
   try {
     let { currentScope, scopeInfo } = action.payload;
     let { scopeIdentity, datasetValue, datasetYearValue } = scopeInfo;
-    let response = yield axios.get(`/api/data/scope/${currentScope}/
-      ${scopeIdentity}/${datasetValue}/${datasetYearValue}`);
+
+    let urlString = `/api/data/scope/${currentScope}/${scopeIdentity}/${datasetValue}/${datasetYearValue}`;
+    let response = yield axios.get(urlString);
 
     yield put({ type: 'SET_SPECIFIC_DATASET', payload: response.data });
   } catch (error) {

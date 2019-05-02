@@ -1,12 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Placeholder, Segment, Header } from 'semantic-ui-react';
+import { Placeholder, Segment, Header, Breadcrumb } from 'semantic-ui-react';
 import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Pie } from 'react-chartjs-2';
 import './Visualizer.css';
 
 class Visualizer extends Component {
+
+   state = {
+
+   }
 
    componentDidMount = () => {
       this.getUrl();
@@ -131,8 +135,18 @@ class Visualizer extends Component {
                Visualizer
             </Header>
 
+            <Breadcrumb>
+               <Breadcrumb.Section link>Home</Breadcrumb.Section>
+               <Breadcrumb.Divider />
+               <Breadcrumb.Section link>Store</Breadcrumb.Section>
+               <Breadcrumb.Divider icon='right angle' />
+               <Breadcrumb.Section active>
+                  Search for: 
+                  {/* <a href='#'>paper towels</a> */}
+               </Breadcrumb.Section>
+            </Breadcrumb>
+
             {this.handleGraphRender()}
-            <p>{JSON.stringify(this.props.dataset)}</p>
          </section >
       );
    }

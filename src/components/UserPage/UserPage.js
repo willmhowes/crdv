@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import LogOutButton from '../LogOutButton/LogOutButton';
 import { Button, Segment, Header } from 'semantic-ui-react';
 import './UserPage.css';
 
