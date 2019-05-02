@@ -1,14 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Form } from "semantic-ui-react";
+import { Form, Dropdown } from "semantic-ui-react";
 
 // Renders either:
 // 1. disabled dropdown menu
 // 2. dropdown of available datasets in selected scope
 const renderDatasetInput = props => {
-   if (!props.allowContinue) {
+   if (!props.showDatasetSelection) {
       return (
-         <Form.Dropdown
+         <Form.Field
+            control={Dropdown}
+            required={!!props.isRequired}
             search
             selection
             disabled
@@ -32,7 +34,9 @@ const renderDatasetInput = props => {
       }
 
       return (
-         <Form.Dropdown
+         <Form.Field
+            control={Dropdown}
+            required={!!props.isRequired}
             search
             selection
             fluid

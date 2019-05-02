@@ -6,6 +6,12 @@ import { withRouter } from 'react-router-dom';
 import { Pie } from 'react-chartjs-2';
 import './Visualizer.css';
 
+// import RenderStateInput from '../SelectionComponents/StateDropdown';
+// import RenderDistrictInput from '../SelectionComponents/DistrictDropdown';
+// import RenderSchoolInput from '../SelectionComponents/SchoolDropdown';
+// import RenderDatasetInput from '../SelectionComponents/DatasetDropdown';
+// import RenderDatasetYearInput from '../SelectionComponents/DatasetYearDropdown';
+
 class Visualizer extends Component {
 
    state = {
@@ -135,6 +141,26 @@ class Visualizer extends Component {
                Visualizer
             </Header>
 
+            {/* <RenderStateInput
+               stateValue={this.props.stateValue}
+               handleStateListChange={this.handleStateListChange}
+               isRequired={true} />
+            <RenderDistrictInput
+               districtValue={this.props.districtValue}
+               handleDistrictListChange={this.handleDistrictListChange} />
+            <RenderSchoolInput
+               schoolValue={this.props.schoolValue}
+               handleSchoolListChange={this.handleSchoolListChange} />
+            <RenderDatasetInput
+               datasetValue={this.props.datasetValue}
+               handleDatasetListChange={this.handleDatasetListChange}
+               allowContinue={this.state.allowContinue} />
+            <RenderDatasetYearInput
+               datasetYearValue={this.props.datasetYearValue}
+               handleDatasetYearListChange={this.handleDatasetYearListChange}
+               showYearSelection={this.state.showYearSelection}
+               datasetValue={this.props.datasetValue} /> */}
+
             <Breadcrumb>
                <Breadcrumb.Section link>Home</Breadcrumb.Section>
                <Breadcrumb.Divider />
@@ -155,6 +181,12 @@ class Visualizer extends Component {
 const mapStateToProps = state => ({
    user: state.user,
    dataset: state.currentDataset,
+   // stateValue: state.selectedScope.scopeStateReducer,
+   // districtValue: state.selectedScope.scopeDistrictReducer,
+   // schoolValue: state.selectedScope.scopeSchoolReducer,
+   // datasetValue: state.selectedScope.scopeDatasetReducer,
+   // datasetYearValue: state.selectedScope.scopeDatasetYearReducer,
+   // currentScope: state.selectedScope.scopeCurrentLevelReducer,
 });
 
 export default connect(mapStateToProps)(withRouter(Visualizer));

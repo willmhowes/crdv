@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Form } from "semantic-ui-react";
+import { Form, Dropdown } from "semantic-ui-react";
 
 // Renders either:
 // 1. disabled dropdown menu
@@ -8,7 +8,9 @@ import { Form } from "semantic-ui-react";
 const renderDatasetYearInput = props => {
    if (!props.showYearSelection) {
       return (
-         <Form.Dropdown
+         <Form.Field
+            control={Dropdown}
+            required={!!props.isRequired}
             search
             selection
             fluid
@@ -32,7 +34,9 @@ const renderDatasetYearInput = props => {
       }
 
       return (
-         <Form.Dropdown
+         <Form.Field
+            control={Dropdown}
+            required={!!props.isRequired}
             search
             selection
             fluid

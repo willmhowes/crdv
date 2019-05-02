@@ -33,15 +33,7 @@ function* fetchSchoolList(action) {
 function* fetchDatasetList(action) {
   try {
     let { currentScope, scopeInfo } = action.payload;
-    let { stateValue, districtValue, schoolValue } = scopeInfo;
-    let response;
-    if (currentScope === 'state') {
-      response = yield axios.get(`/api/data/dataset/${currentScope}/${stateValue}`);
-    } else if (currentScope === 'district') {
-      response = yield axios.get(`/api/data/dataset/${currentScope}/${districtValue}`);
-    } else if (currentScope === 'school') {
-      response = yield axios.get(`/api/data/dataset/${currentScope}/${schoolValue}`);
-    }
+    const response = yield axios.get(`/api/data/dataset/${currentScope}/${scopeInfo}`);
     yield put({ type: 'SET_DATASET_LIST', payload: response.data });
   } catch (error) {
     console.log('list of datasets GET request failed', error);

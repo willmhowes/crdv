@@ -14,8 +14,9 @@ import RenderDatasetYearInput from '../SelectionComponents/DatasetYearDropdown';
 class SelectionPage extends Component {
 
    state = {
-      allowContinue: false,
+      showDatasetSelection: false,
       showYearSelection: false,
+      allowContinue: false,
    }
 
    // Function handles URL pathing
@@ -69,14 +70,26 @@ class SelectionPage extends Component {
    // updates stateValue in selectedScopeReducer, currentScope in local state
    // then dispatches request for list of relevant districts
    handleStateListChange = (event, { value }) => {
+      const scopeInfo = value;
+      const currentScope = 'state';
+      const payload = { currentScope, scopeInfo };
+      this.props.dispatch({ type: 'GET_DATASET_LIST', payload: payload });
       this.props.dispatch({ type: 'GET_DISTRICT_LIST', payload: value });
       this.props.dispatch({ type: 'SET_SCOPE_OF_STATE', payload: value });
       this.props.dispatch({ type: 'SET_CURRENT_LEVEL_OF_SCOPE', payload: 'state' });
+
+      this.setState({
+         showDatasetSelection: true,
+      });
    }
 
    // updates districtValue in selectedScopeReducer, currentScope in local state
    // then dispatches request for list of relevant schools
    handleDistrictListChange = (event, { value }) => {
+      const scopeInfo = value;
+      const currentScope = 'district';
+      const payload = { currentScope, scopeInfo };
+      this.props.dispatch({ type: 'GET_DATASET_LIST', payload: payload });
       this.props.dispatch({ type: 'GET_SCHOOL_LIST', payload: value });
       this.props.dispatch({ type: 'SET_SCOPE_OF_DISTRICT', payload: value });
       this.props.dispatch({ type: 'SET_CURRENT_LEVEL_OF_SCOPE', payload: 'district' });
@@ -85,20 +98,12 @@ class SelectionPage extends Component {
    // updates schoolValue in selectedScopeReducer, currentScope in local state
    // then dispatches request for list of relevant datasets
    handleSchoolListChange = (event, { value }) => {
-      // destructures everything except schoolValue and currentScope
-      // schoolValue is passed as the prop 'value'
-      // currentScope isn't set until setState, which is after the dispatch
-      const { stateValue, districtValue } = this.props;
-      const scopeInfo = { stateValue, districtValue, schoolValue: value };
+      const scopeInfo = value;
       const currentScope = 'school';
       const payload = { currentScope, scopeInfo };
       this.props.dispatch({ type: 'GET_DATASET_LIST', payload: payload });
       this.props.dispatch({ type: 'SET_SCOPE_OF_SCHOOL', payload: value });
       this.props.dispatch({ type: 'SET_CURRENT_LEVEL_OF_SCOPE', payload: 'school' });
-
-      this.setState({
-         allowContinue: true,
-      });
    }
 
    // updates datasetValue in selectedScopeReducer
@@ -112,6 +117,9 @@ class SelectionPage extends Component {
    // updates datasetYearValue in selectedScopeReducer
    handleDatasetYearListChange = (event, { value }) => {
       this.props.dispatch({ type: 'SET_SCOPE_OF_DATASET_YEAR', payload: value });
+      this.setState({
+         allowContinue: true,
+      });
    }
 
    render() {
@@ -125,26 +133,28 @@ class SelectionPage extends Component {
                      <RenderStateInput
                         stateValue={this.props.stateValue}
                         handleStateListChange={this.handleStateListChange}
-                        isRequired={true}/>
+                        isRequired={true} />
                      <RenderDistrictInput
                         districtValue={this.props.districtValue}
-                        handleDistrictListChange={this.handleDistrictListChange}/>
+                        handleDistrictListChange={this.handleDistrictListChange} />
                   </Form.Group>
 
                   <RenderSchoolInput
                      schoolValue={this.props.schoolValue}
-                     handleSchoolListChange={this.handleSchoolListChange}/>
+                     handleSchoolListChange={this.handleSchoolListChange} />
 
                   <Form.Group widths="equal">
                      <RenderDatasetInput
                         datasetValue={this.props.datasetValue}
                         handleDatasetListChange={this.handleDatasetListChange}
-                        allowContinue={this.state.allowContinue}/>
+                        showDatasetSelection={this.state.showDatasetSelection}
+                        isRequired={true} />
                      <RenderDatasetYearInput
                         datasetYearValue={this.props.datasetYearValue}
                         handleDatasetYearListChange={this.handleDatasetYearListChange}
                         showYearSelection={this.state.showYearSelection}
-                        datasetValue={this.props.datasetValue}/>
+                        datasetValue={this.props.datasetValue}
+                        isRequired={true} />
                   </Form.Group>
 
                   {this.state.allowContinue ?
@@ -153,14 +163,14 @@ class SelectionPage extends Component {
                         primary
                         fluid>
                         Continue
-                  </Form.Button> :
+                     </Form.Button> :
                      <Form.Button
                         type="button"
                         primary
                         disabled
                         fluid>
                         Continue
-                  </Form.Button>}
+                     </Form.Button>}
 
                </Form>
             </Segment>
