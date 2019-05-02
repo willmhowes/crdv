@@ -141,7 +141,7 @@ class Visualizer extends Component {
                <Breadcrumb.Section link>Store</Breadcrumb.Section>
                <Breadcrumb.Divider icon='right angle' />
                <Breadcrumb.Section active>
-                  Search for: 
+                  Search for:
                   {/* <a href='#'>paper towels</a> */}
                </Breadcrumb.Section>
             </Breadcrumb>
@@ -154,7 +154,7 @@ class Visualizer extends Component {
 
 const mapStateToProps = state => ({
    user: state.user,
-   dataset: state.scopeOption.specificDatasetReducer,
+   dataset: state.currentDataset,
 });
 
 export default connect(mapStateToProps)(withRouter(Visualizer));
