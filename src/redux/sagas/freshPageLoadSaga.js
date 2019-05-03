@@ -21,11 +21,17 @@ function* setSelectedScopeFresh(action) {
          datasetListPayload = { currentScope, scopeInfo: schoolValue }
       }
 
+      yield put({ type: 'GET_DATASET_LIST', payload: datasetListPayload });
+
+
       // Saga calls
       yield put({ type: 'GET_STATE_LIST' });
       yield put({ type: 'GET_DISTRICT_LIST', payload: stateValue });
-      yield put({ type: 'GET_SCHOOL_LIST', payload: districtValue });
-      yield put({ type: 'GET_DATASET_LIST', payload: datasetListPayload });
+
+      // Verifies that there is a districtValue at all
+      if (!!districtValue) {
+         yield put({ type: 'GET_SCHOOL_LIST', payload: districtValue });
+      }
 
       // Reducer calls
       yield put({ type: 'SET_SCOPE_OF_STATE', payload: stateValue });

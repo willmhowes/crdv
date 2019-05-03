@@ -31,9 +31,10 @@ class StateDropdown extends Component {
                selection
                options={[{ key: 0, value: null, text: null }]}
                placeholder="State"
-               label="State"
+               label={this.props.label}
                disabled
                loading
+
             />
          );
       } else {
@@ -52,7 +53,7 @@ class StateDropdown extends Component {
                value={this.props.stateValue}
                onChange={this.handleStateListChange}
                options={stateListOptions}
-               label="State"
+               label={this.props.label}
             />
          );
       }

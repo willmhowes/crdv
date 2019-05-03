@@ -79,10 +79,10 @@ class SelectionPage extends Component {
                <Header as='h2'>Scope Selection</Header>
                <Form>
                   <Form.Group>
-                     <RenderStateInput isRequired={true} />
-                     <RenderDistrictInput />
+                     <RenderStateInput isRequired={true} label="State" />
+                     <RenderDistrictInput label="District" />
                   </Form.Group>
-                  <RenderSchoolInput />
+                  <RenderSchoolInput label="School" fluid={true} />
                </Form>
             </Segment>
 

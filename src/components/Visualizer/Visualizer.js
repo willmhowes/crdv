@@ -166,19 +166,23 @@ class Visualizer extends Component {
                {this.props.datasetValue}
             </Header>
 
-            <RenderStateInput isRequired={true} />
-            <RenderDistrictInput />
-            <RenderSchoolInput />
-
             <Breadcrumb>
-               <Breadcrumb.Section link>Home</Breadcrumb.Section>
-               <Breadcrumb.Divider />
-               <Breadcrumb.Section link>Store</Breadcrumb.Section>
-               <Breadcrumb.Divider icon='right angle' />
-               <Breadcrumb.Section active>
-                  Search for:
-                  {/* <a href='#'>paper towels</a> */}
+               <Breadcrumb.Section>
+                  <RenderStateInput />
                </Breadcrumb.Section>
+
+               <Breadcrumb.Divider icon='right angle' />
+
+               <Breadcrumb.Section>
+                  <RenderDistrictInput />
+               </Breadcrumb.Section>
+
+               <Breadcrumb.Divider icon='right angle' />
+
+               <Breadcrumb.Section>
+                  <RenderSchoolInput />
+               </Breadcrumb.Section>
+
             </Breadcrumb>
 
             {this.handleGraphRender()}
