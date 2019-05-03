@@ -6,9 +6,9 @@ import { withRouter } from 'react-router-dom';
 import { Pie } from 'react-chartjs-2';
 import './Visualizer.css';
 
-// import RenderStateInput from '../SelectionComponents/StateDropdown';
-// import RenderDistrictInput from '../SelectionComponents/DistrictDropdown';
-// import RenderSchoolInput from '../SelectionComponents/SchoolDropdown';
+import RenderStateInput from '../SelectionComponents/StateDropdown';
+import RenderDistrictInput from '../SelectionComponents/DistrictDropdown';
+import RenderSchoolInput from '../SelectionComponents/SchoolDropdown';
 
 class Visualizer extends Component {
 
@@ -57,6 +57,13 @@ class Visualizer extends Component {
       let payload = { currentScope, scopeInfo };
 
       this.props.dispatch({ type: 'GET_SPECIFIC_DATASET', payload: payload });
+
+      // If page is being freshly loaded, fill reducers with proper information
+      if (this.props.stateList[0] === 'State') {
+         let scopeInfo = { stateValue, districtValue, schoolValue, datasetValue, datasetYearValue };
+         let payload = { currentScope, scopeInfo };
+         this.props.dispatch({ type: 'SET_SELECTED_SCOPE_FRESH', payload: payload });
+      }
    }
 
    renderGraph = (dataset, i) => {
@@ -159,9 +166,9 @@ class Visualizer extends Component {
                {this.props.datasetValue}
             </Header>
 
-            {/* <RenderStateInput isRequired={true} />
+            <RenderStateInput isRequired={true} />
             <RenderDistrictInput />
-            <RenderSchoolInput /> */}
+            <RenderSchoolInput />
 
             <Breadcrumb>
                <Breadcrumb.Section link>Home</Breadcrumb.Section>
@@ -189,6 +196,7 @@ const mapStateToProps = state => ({
    datasetValue: state.selectedScope.scopeDatasetReducer,
    // datasetYearValue: state.selectedScope.scopeDatasetYearReducer,
    // currentScope: state.selectedScope.scopeCurrentLevelReducer,
+   stateList: state.scopeOption.stateReducer,
 });
 
 export default connect(mapStateToProps)(withRouter(Visualizer));
