@@ -61,18 +61,6 @@ class SelectionPage extends Component {
       this.props.dispatch({ type: 'GET_STATE_LIST' });
    }
 
-   // updates datasetValue in selectedScopeReducer
-   handleDatasetListChange = (event, { value }) => {
-      this.props.dispatch({ type: 'SET_SCOPE_OF_DATASET', payload: value });
-      this.props.dispatch({ type: 'SET_YEAR_SELECTION_APPEARANCE', payload: true });
-   }
-
-   // updates datasetYearValue in selectedScopeReducer
-   handleDatasetYearListChange = (event, { value }) => {
-      this.props.dispatch({ type: 'SET_SCOPE_OF_DATASET_YEAR', payload: value });
-      this.props.dispatch({ type: 'SET_CONTINUE_BUTTON_APPEARANCE', payload: true });
-   }
-
    render() {
       return (
          <section className="SelectionPage-section">
@@ -88,17 +76,8 @@ class SelectionPage extends Component {
                   <RenderSchoolInput />
 
                   <Form.Group widths="equal">
-                     <RenderDatasetInput
-                        datasetValue={this.props.datasetValue}
-                        handleDatasetListChange={this.handleDatasetListChange}
-                        showDatasetSelection={this.props.showDatasetSelection}
-                        isRequired={true} />
-                     <RenderDatasetYearInput
-                        datasetYearValue={this.props.datasetYearValue}
-                        handleDatasetYearListChange={this.handleDatasetYearListChange}
-                        showYearSelection={this.props.showYearSelection}
-                        datasetValue={this.props.datasetValue}
-                        isRequired={true} />
+                     <RenderDatasetInput isRequired={true} />
+                     <RenderDatasetYearInput isRequired={true} />
                   </Form.Group>
 
                   {this.props.allowContinue ?
@@ -114,7 +93,8 @@ class SelectionPage extends Component {
                         disabled
                         fluid>
                         Continue
-                     </Form.Button>}
+                     </Form.Button>
+                  }
 
                </Form>
             </Segment>

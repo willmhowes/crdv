@@ -34,3 +34,7 @@
 .nav-right {
   float: right;
 }
+
+.Nav-navbar {
+  margin: 20px 60px 20px 60px;
+}

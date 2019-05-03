@@ -9,8 +9,6 @@ import './Visualizer.css';
 // import RenderStateInput from '../SelectionComponents/StateDropdown';
 // import RenderDistrictInput from '../SelectionComponents/DistrictDropdown';
 // import RenderSchoolInput from '../SelectionComponents/SchoolDropdown';
-// import RenderDatasetInput from '../SelectionComponents/DatasetDropdown';
-// import RenderDatasetYearInput from '../SelectionComponents/DatasetYearDropdown';
 
 class Visualizer extends Component {
 
@@ -121,9 +119,11 @@ class Visualizer extends Component {
    handleGraphRender = () => {
       if (this.props.dataset[0] === "Data") {
          return (
-            <Placeholder style={{ height: 150, width: 150 }}>
-               <Placeholder.Image />
-            </Placeholder>
+            <section className="Visualizer-graph-placeholder">
+               <Placeholder style={{ height: 400, width: 400 }}>
+                  <Placeholder.Image />
+               </Placeholder>
+            </section>
          );
       } else {
          return (this.props.dataset.map((datarow, i) =>
@@ -137,40 +137,24 @@ class Visualizer extends Component {
    render() {
       return (
          <section>
-            <Header as="h1">
-               Visualizer
-            </Header>
+            {/* <Header as="h3" textAlign='left'>
+               {this.props.datasetValue}
+            </Header> */}
 
-            {/* <RenderStateInput
-               stateValue={this.props.stateValue}
-               handleStateListChange={this.handleStateListChange}
-               isRequired={true} />
-            <RenderDistrictInput
-               districtValue={this.props.districtValue}
-               handleDistrictListChange={this.handleDistrictListChange} />
-            <RenderSchoolInput
-               schoolValue={this.props.schoolValue}
-               handleSchoolListChange={this.handleSchoolListChange} />
-            <RenderDatasetInput
-               datasetValue={this.props.datasetValue}
-               handleDatasetListChange={this.handleDatasetListChange}
-               allowContinue={this.state.allowContinue} />
-            <RenderDatasetYearInput
-               datasetYearValue={this.props.datasetYearValue}
-               handleDatasetYearListChange={this.handleDatasetYearListChange}
-               showYearSelection={this.state.showYearSelection}
-               datasetValue={this.props.datasetValue} /> */}
+            {/* <RenderStateInput isRequired={true} />
+            <RenderDistrictInput />
+            <RenderSchoolInput /> */}
 
-            <Breadcrumb>
+            {/* <Breadcrumb>
                <Breadcrumb.Section link>Home</Breadcrumb.Section>
                <Breadcrumb.Divider />
                <Breadcrumb.Section link>Store</Breadcrumb.Section>
                <Breadcrumb.Divider icon='right angle' />
                <Breadcrumb.Section active>
                   Search for:
-                  {/* <a href='#'>paper towels</a> */}
+                  <a href='#'>paper towels</a>
                </Breadcrumb.Section>
-            </Breadcrumb>
+            </Breadcrumb> */}
 
             {this.handleGraphRender()}
          </section >
@@ -184,7 +168,7 @@ const mapStateToProps = state => ({
    // stateValue: state.selectedScope.scopeStateReducer,
    // districtValue: state.selectedScope.scopeDistrictReducer,
    // schoolValue: state.selectedScope.scopeSchoolReducer,
-   // datasetValue: state.selectedScope.scopeDatasetReducer,
+   datasetValue: state.selectedScope.scopeDatasetReducer,
    // datasetYearValue: state.selectedScope.scopeDatasetYearReducer,
    // currentScope: state.selectedScope.scopeCurrentLevelReducer,
 });
