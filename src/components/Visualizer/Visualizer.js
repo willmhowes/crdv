@@ -12,10 +12,6 @@ import './Visualizer.css';
 
 class Visualizer extends Component {
 
-   state = {
-
-   }
-
    componentDidMount = () => {
       this.getUrl();
    }
@@ -158,7 +154,7 @@ class Visualizer extends Component {
 
    render() {
       return (
-         <section>
+         <section className="Visualizer-section-body">
             <Header as="h3" textAlign='left'>
                {this.props.datasetValue}
             </Header>
