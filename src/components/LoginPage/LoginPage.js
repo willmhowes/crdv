@@ -69,9 +69,7 @@ class LoginPage extends Component {
           />
         )}
         <Segment >
-          <Header as="h1">
-            Login
-          </Header>
+          <Header as="h1">Login</Header>
           <Form onSubmit={this.login}>
             {this.renderFormInput("Username", "text", "username", this.state.username)}
             {this.renderFormInput("Password", "password", "password", this.state.password)}

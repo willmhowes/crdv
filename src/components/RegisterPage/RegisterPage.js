@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Form, Segment, Header, Message } from 'semantic-ui-react';
+import { Form, Segment, Header, Message, Button } from 'semantic-ui-react';
 import './RegisterPage.css';
 
 class RegisterPage extends Component {
@@ -31,72 +31,68 @@ class RegisterPage extends Component {
     });
   }
 
+  // Takes arguements of properties for Form.Input component
+  renderFormInput = (label, type, name, value) => {
+    // if error message exists, renders input with 'error' property
+    if (!!this.props.errors.registrationMessage) {
+      return (
+        <Form.Input
+          error
+          label={label} type={type}
+          name={name} value={value}
+          placeholder={label}
+          onChange={this.handleInputChangeFor(name)}
+        />
+      )
+      // else, renders standard input field
+    } else {
+      return (
+        <Form.Input
+          label={label} type={type}
+          name={name} value={value}
+          placeholder={label}
+          onChange={this.handleInputChangeFor(name)}
+        />
+      )
+    }
+  }
+
   render() {
     return (
       <div className="RegisterPage-form">
 
-        <Form.Input
-          error
-          label="Username" type="text"
-          name="username" value={this.state.username}
-          placeholder="Username"
-          onChange={this.handleInputChangeFor('username')}
-        />
-
         {this.props.errors.registrationMessage && (
-          <h2
-            className="alert"
+          <Message
+            error
+            header="Error"
             role="alert"
-          >
-            {this.props.errors.registrationMessage}
-          </h2>
+            content={this.props.errors.registrationMessage}
+          />
         )}
-        <Segment>
 
+        <Segment>
+          <Header as="h1">User Registration</Header>
           <Form onSubmit={this.registerUser}>
-            <h1>Register User</h1>
-            <div>
-              <label htmlFor="username">
-                Username:
-              <input
-                  type="text"
-                  name="username"
-                  value={this.state.username}
-                  onChange={this.handleInputChangeFor('username')}
-                />
-              </label>
-            </div>
-            <div>
-              <label htmlFor="password">
-                Password:
-              <input
-                  type="password"
-                  name="password"
-                  value={this.state.password}
-                  onChange={this.handleInputChangeFor('password')}
-                />
-              </label>
-            </div>
-            <div>
-              <input
-                className="register"
-                type="submit"
-                name="submit"
-                value="Register"
-              />
-            </div>
+            {this.renderFormInput("Username", "text", "username", this.state.username)}
+            {this.renderFormInput("Password", "password", "password", this.state.password)}
+            <Form.Button
+              primary
+              fluid
+              type="submit"
+              name="submit" >
+              Register
+            </Form.Button>
+            <Form.Button
+              basic
+              secondary
+              fluid
+              size="small"
+              type="button"
+              onClick={() => { this.props.dispatch({ type: 'SET_TO_LOGIN_MODE' }) }} >
+              Return to Login Page
+            </Form.Button>
           </Form>
         </Segment>
-
-        <center>
-          <button
-            type="button"
-            className="link-button"
-            onClick={() => { this.props.dispatch({ type: 'SET_TO_LOGIN_MODE' }) }}
-          >
-            Login
-          </button>
-        </center>
       </div>
     );
   }
