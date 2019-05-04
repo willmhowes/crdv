@@ -6,15 +6,11 @@ import { withRouter } from 'react-router-dom';
 import { Pie } from 'react-chartjs-2';
 import './Visualizer.css';
 
-// import RenderStateInput from '../SelectionComponents/StateDropdown';
-// import RenderDistrictInput from '../SelectionComponents/DistrictDropdown';
-// import RenderSchoolInput from '../SelectionComponents/SchoolDropdown';
+import RenderStateInput from '../SelectionComponents/StateDropdown';
+import RenderDistrictInput from '../SelectionComponents/DistrictDropdown';
+import RenderSchoolInput from '../SelectionComponents/SchoolDropdown';
 
 class Visualizer extends Component {
-
-   state = {
-
-   }
 
    componentDidMount = () => {
       this.getUrl();
@@ -23,14 +19,36 @@ class Visualizer extends Component {
    getUrl = () => {
       // Breaking down URL into an array pathSplit
       const pathSplit = window.location.hash.split('/')
+      console.log(pathSplit);
 
       // Retrieving scope points from URL
       const currentScope = String(pathSplit[2]);
-      const scopeIdentity = String(pathSplit[3]);
-      const datasetYearValue = String(pathSplit[5]);
+      const datasetYearValue = String(pathSplit[4]);
+      const stateValue = String(pathSplit[5]);
+      let districtValue = null;
+      let schoolValue = null;
+
+      // Parse URL for districtValue and schoolValue
+      // This works because first 7 digits of SchoolID are the District ID
+      if (String(pathSplit[6]).length === 7) {
+         districtValue = String(pathSplit[6]);
+      } else if (String(pathSplit[6]).length === 12) {
+         districtValue = String(pathSplit[6]).substring(0, 7);
+         schoolValue = String(pathSplit[6]);
+      }
+
+      // save current scope's relevant value in a variable scopeIdentity
+      let scopeIdentity;
+      if (currentScope === 'state') {
+         scopeIdentity = stateValue;
+      } else if (currentScope === 'district') {
+         scopeIdentity = districtValue;
+      } else if (currentScope === 'school') {
+         scopeIdentity = schoolValue;
+      }
 
       // Rebuilding dataset name from URL
-      const datasetValueMod = String(pathSplit[4]);
+      const datasetValueMod = String(pathSplit[3]);
       const datasetValueArray = datasetValueMod.split('_');
       const datasetValue = datasetValueArray.join(' ');
 
@@ -39,6 +57,13 @@ class Visualizer extends Component {
       let payload = { currentScope, scopeInfo };
 
       this.props.dispatch({ type: 'GET_SPECIFIC_DATASET', payload: payload });
+
+      // If page is being freshly loaded, fill reducers with proper information
+      if (this.props.stateList[0] === 'State') {
+         let scopeInfo = { stateValue, districtValue, schoolValue, datasetValue, datasetYearValue };
+         let payload = { currentScope, scopeInfo };
+         this.props.dispatch({ type: 'SET_SELECTED_SCOPE_FRESH', payload: payload });
+      }
    }
 
    renderGraph = (dataset, i) => {
@@ -136,25 +161,29 @@ class Visualizer extends Component {
 
    render() {
       return (
-         <section>
-            {/* <Header as="h3" textAlign='left'>
+         <section className="Visualizer-section-body">
+            <Header as="h3" textAlign='left'>
                {this.props.datasetValue}
-            </Header> */}
+            </Header>
 
-            {/* <RenderStateInput isRequired={true} />
-            <RenderDistrictInput />
-            <RenderSchoolInput /> */}
-
-            {/* <Breadcrumb>
-               <Breadcrumb.Section link>Home</Breadcrumb.Section>
-               <Breadcrumb.Divider />
-               <Breadcrumb.Section link>Store</Breadcrumb.Section>
-               <Breadcrumb.Divider icon='right angle' />
-               <Breadcrumb.Section active>
-                  Search for:
-                  <a href='#'>paper towels</a>
+            <Breadcrumb>
+               <Breadcrumb.Section>
+                  <RenderStateInput />
                </Breadcrumb.Section>
-            </Breadcrumb> */}
+
+               <Breadcrumb.Divider icon='right angle' />
+
+               <Breadcrumb.Section>
+                  <RenderDistrictInput />
+               </Breadcrumb.Section>
+
+               <Breadcrumb.Divider icon='right angle' />
+
+               <Breadcrumb.Section>
+                  <RenderSchoolInput />
+               </Breadcrumb.Section>
+
+            </Breadcrumb>
 
             {this.handleGraphRender()}
          </section >
@@ -171,6 +200,7 @@ const mapStateToProps = state => ({
    datasetValue: state.selectedScope.scopeDatasetReducer,
    // datasetYearValue: state.selectedScope.scopeDatasetYearReducer,
    // currentScope: state.selectedScope.scopeCurrentLevelReducer,
+   stateList: state.scopeOption.stateReducer,
 });
 
 export default connect(mapStateToProps)(withRouter(Visualizer));

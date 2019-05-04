@@ -28,7 +28,7 @@ class DistrictDropdown extends Component {
                disabled
                options={[{ key: 0, value: null, text: null }]}
                placeholder="District"
-               label="District"
+               label={this.props.label}
             />
          );
       } else {
@@ -44,7 +44,7 @@ class DistrictDropdown extends Component {
                value={this.props.districtValue}
                onChange={this.handleDistrictListChange}
                options={districtListOptions}
-               label="District"
+               label={this.props.label}
             />
          );
       }

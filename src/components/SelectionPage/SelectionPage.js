@@ -16,13 +16,29 @@ class SelectionPage extends Component {
    // Function handles URL pathing
    goToVisualizer = (payload) => {
       let { currentScope } = payload;
-      let { scopeIdentity, datasetValue, datasetYearValue } = payload.scopeInfo;
+      let {
+         stateValue,
+         districtValue,
+         schoolValue,
+         datasetValue,
+         datasetYearValue
+      } = payload.scopeInfo;
+
+      console.log('currentScope:', currentScope);
 
       // Convert datasetValue into a string with underscores
       let datasetValueArray = datasetValue.split(' ');
       let datasetValueMod = datasetValueArray.join('_');
       // Save url into a string
-      let urlString = `/visualizer/${currentScope}/${scopeIdentity}/${datasetValueMod}/${datasetYearValue}`;
+      let urlString;
+      if (currentScope === 'state') {
+         urlString = `/visualizer/${currentScope}/${datasetValueMod}/${datasetYearValue}/${stateValue}`;
+      } else if (currentScope === 'district') {
+         urlString = `/visualizer/${currentScope}/${datasetValueMod}/${datasetYearValue}/${stateValue}/${districtValue}`;
+      } else if (currentScope === 'school') {
+         urlString = `/visualizer/${currentScope}/${datasetValueMod}/${datasetYearValue}/${stateValue}/${schoolValue}`;
+      }
+
       // Push urlString onto history stack
       this.props.history.push(urlString);
    }
@@ -38,25 +54,20 @@ class SelectionPage extends Component {
          currentScope
       } = this.props;
 
-      // Define scope as a variable scopeIdentity
-      let scopeIdentity;
-      if (currentScope === 'state') {
-         scopeIdentity = stateValue;
-      } else if (currentScope === 'district') {
-         scopeIdentity = districtValue;
-      } else if (currentScope === 'school') {
-         scopeIdentity = schoolValue;
-      }
-
       // save scope information in object scopeInfo
-      const scopeInfo = { scopeIdentity, datasetValue, datasetYearValue };
+      const scopeInfo = {
+         stateValue,
+         districtValue,
+         schoolValue,
+         datasetValue,
+         datasetYearValue,
+      };
 
       // Save data in object payload and send as arguement to goToVisualizer
       const payload = { currentScope, scopeInfo };
       this.goToVisualizer(payload);
    }
 
-   // Loads list of states after component mounts
    componentDidMount = () => {
       this.props.dispatch({ type: 'GET_STATE_LIST' });
    }
@@ -65,28 +76,30 @@ class SelectionPage extends Component {
       return (
          <section className="SelectionPage-section">
             <Segment>
-               <Header as='h1'>Select Scope of Data</Header>
-
-               <Form onSubmit={this.handleSubmit}>
+               <Header as='h2'>Scope Selection</Header>
+               <Form>
                   <Form.Group>
-                     <RenderStateInput isRequired={true} />
-                     <RenderDistrictInput />
+                     <RenderStateInput isRequired={true} label="State" />
+                     <RenderDistrictInput label="District" />
                   </Form.Group>
+                  <RenderSchoolInput label="School" fluid={true} />
+               </Form>
+            </Segment>
 
-                  <RenderSchoolInput />
-
+            <Segment>
+               <Header as='h2'>Dataset Selection</Header>
+               <Form onSubmit={this.handleSubmit}>
                   <Form.Group widths="equal">
                      <RenderDatasetInput isRequired={true} />
                      <RenderDatasetYearInput isRequired={true} />
                   </Form.Group>
-
                   {this.props.allowContinue ?
                      <Form.Button
                         type="submit"
                         primary
                         fluid>
                         Continue
-                     </Form.Button> :
+                        </Form.Button> :
                      <Form.Button
                         type="button"
                         primary
@@ -95,7 +108,6 @@ class SelectionPage extends Component {
                         Continue
                      </Form.Button>
                   }
-
                </Form>
             </Segment>
          </section>

@@ -25,10 +25,10 @@ class SchoolDropdown extends Component {
                search
                selection
                disabled
-               fluid
+               fluid={this.props.fluid}
                options={[{ key: 0, value: null, text: null }]}
                placeholder="School"
-               label="School"
+               label={this.props.label}
             />
          );
       } else {
@@ -40,12 +40,12 @@ class SchoolDropdown extends Component {
             <Form.Dropdown
                search
                selection
-               fluid
+               fluid={this.props.fluid}
                placeholder="School"
                value={this.props.schoolValue}
                onChange={this.handleSchoolListChange}
                options={schoolListOptions}
-               label="School"
+               label={this.props.label}
             />
          );
       }
