@@ -19,7 +19,6 @@ import InfoPage from '../InfoPage/InfoPage';
 import SelectionPage from '../SelectionPage/SelectionPage';
 import Visualizer from '../Visualizer/Visualizer';
 
-import './App.css';
 import 'semantic-ui-css/semantic.min.css';
 
 class App extends Component {
