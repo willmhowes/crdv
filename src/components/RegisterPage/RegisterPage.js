@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Form, Segment, Header, Message, Button } from 'semantic-ui-react';
+import { Form, Segment, Header, Message } from 'semantic-ui-react';
 import './RegisterPage.css';
 
 class RegisterPage extends Component {
