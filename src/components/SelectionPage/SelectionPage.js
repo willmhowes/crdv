@@ -75,6 +75,15 @@ class SelectionPage extends Component {
    render() {
       return (
          <section className="SelectionPage-section">
+
+            <Segment>
+               <Form.Button
+                  fluid
+                  onClick={() => window.location.reload()} >
+                  Refresh Selection
+                     </Form.Button>
+            </Segment>
+
             <Segment>
                <Header as='h2'>Scope Selection</Header>
                <Form>
@@ -108,6 +117,7 @@ class SelectionPage extends Component {
                         Continue
                      </Form.Button>
                   }
+
                </Form>
             </Segment>
          </section>
