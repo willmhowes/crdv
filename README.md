@@ -1,14 +1,12 @@
-#TEMPLATE FILE
-
 # Civil Rights Data Visualizer (CRDV)
 
-The CRDV is a web application built to make it easy for causual users to work with and understand the data made publicly available by the Department of Education’s Civil Rights Data Collection (More information about the data is available [here] (https://www2.ed.gov/about/offices/list/ocr/data.html)). The primary way of interfacing with this data is through the official [CRDC Reporting Tool] (https://ocrdata.ed.gov/), a tool that is powerful but clunky and difficult for casual users to use. The CRDV is built for those who wish to understand the data, but don't have the time or patience to learn the current system.
+The CRDV is a web application built to make it easy for causual users to work with and understand the data made publicly available by the Department of Education’s Civil Rights Data Collection (More information about the data is available [here](https://www2.ed.gov/about/offices/list/ocr/data.html)). The primary way of interfacing with this data is through the official [CRDC Reporting Tool](https://ocrdata.ed.gov/), a tool that is powerful but clunky and difficult for casual users to use. The CRDV is built for those who wish to understand the data, but don't have the time or patience to learn the current system.
 
 ## Built With
 
-- [React] (https://reactjs.org/)
-- [ChartJS] (https://www.chartjs.org/)
-- [Semantic-UI] (https://semantic-ui.com/)
+- [React](https://reactjs.org/)
+- [ChartJS](https://www.chartjs.org/)
+- [Semantic-UI](https://semantic-ui.com/)
 
 ## Getting Started
 
@@ -17,7 +15,7 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/en/)
-- [PostgreSQL] (https://www.postgresql.org/)
+- [PostgreSQL](https://www.postgresql.org/)
 
 ### Installing
 
@@ -44,10 +42,10 @@ Coming Soon
 
 ### Next Steps
 
-- [] Users can update their selected scope from the visualization page
-- [] A given visualization shows useful information that helps a user drawn conclusions
-- [] Users may choose a specific type of data visualization (bar graph, pie chart, etc.)
-- [] Users may export a specific visualization as a .png
+- [ ] Users can update their selected scope from the visualization page
+- [ ] A given visualization shows useful information that helps a user drawn conclusions
+- [ ] Users may choose a specific type of data visualization (bar graph, pie chart, etc.)
+- [ ] Users may export a specific visualization as a .png
 
 ## Authors
 
@@ -55,4 +53,4 @@ Coming Soon
 
 ## Acknowledgments
 
-* This project would not have been possible without help from some of the fine people at [Prime Digital Academy] (https://primeacademy.io/)
+* This project would not have been possible without help from some of the fine people at [Prime Digital Academy](https://primeacademy.io/)
