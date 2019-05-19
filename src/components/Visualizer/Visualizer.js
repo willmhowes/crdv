@@ -93,26 +93,26 @@ class Visualizer extends Component {
             label: dataset['Category'],
             data: tableData,
             backgroundColor: [
-               'rgba(255, 99, 132, 0.2)',
-               'rgba(54, 162, 235, 0.2)',
-               'rgba(255, 206, 86, 0.2)',
-               'rgba(75, 192, 192, 0.2)',
-               'rgba(153, 102, 255, 0.2)',
-               'rgba(255, 159, 64, 0.2)',
-               'rgba(245, 134, 23, 0.2)',
-               'rgba(255, 99, 132, 0.2)',
-               'rgba(54, 162, 235, 0.2)',
+               'rgba(229, 45, 41, 0.4)',
+               'rgba(142, 36, 170, 0.4)',
+               'rgba(57, 73, 171, 0.4)',
+               'rgba(3, 155, 229, 0.4)',
+               'rgba(31, 193, 176, 0.4)',
+               'rgba(67, 160, 71, 0.4)',
+               'rgba(253, 216, 53, 0.4)',
+               'rgba(109, 76, 65, 0.4)',
+               'rgba(84, 110, 122, 0.4)',
             ],
             borderColor: [
-               'rgba(255, 99, 132, 1)',
-               'rgba(54, 162, 235, 1)',
-               'rgba(255, 206, 86, 1)',
-               'rgba(75, 192, 192, 1)',
-               'rgba(153, 102, 255, 1)',
-               'rgba(255, 159, 64, 1)',
-               'rgba(245, 134, 23, 1)',
-               'rgba(255, 99, 132, 1)',
-               'rgba(54, 162, 235, 1)',
+               'rgba(229, 45, 41, 1)',
+               'rgba(142, 36, 170, 1)',
+               'rgba(57, 73, 171, 1)',
+               'rgba(3, 155, 229, 1)',
+               'rgba(31, 193, 176, 1)',
+               'rgba(67, 160, 71, 1)',
+               'rgba(253, 216, 53, 1)',
+               'rgba(109, 76, 65, 1)',
+               'rgba(84, 110, 122, 1)',
             ],
             borderWidth: 1
          }]
@@ -185,6 +185,9 @@ class Visualizer extends Component {
 
             </Breadcrumb>
 
+            <br />
+            <br />
+
             {this.handleGraphRender()}
          </section >
       );
@@ -194,9 +197,9 @@ class Visualizer extends Component {
 const mapStateToProps = state => ({
    user: state.user,
    dataset: state.currentDataset,
-   // stateValue: state.selectedScope.scopeStateReducer,
-   // districtValue: state.selectedScope.scopeDistrictReducer,
-   // schoolValue: state.selectedScope.scopeSchoolReducer,
+   stateValue: state.selectedScope.scopeStateReducer,
+   districtValue: state.selectedScope.scopeDistrictReducer,
+   schoolValue: state.selectedScope.scopeSchoolReducer,
    datasetValue: state.selectedScope.scopeDatasetReducer,
    // datasetYearValue: state.selectedScope.scopeDatasetYearReducer,
    // currentScope: state.selectedScope.scopeCurrentLevelReducer,
