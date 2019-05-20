@@ -12,7 +12,7 @@ function* fetchStateList() {
 
 function* fetchDistrictList(action) {
   try {
-    let state = action.payload;
+    const state = action.payload;
     const response = yield axios.get(`/api/data/district/${state}`);
     yield put({ type: 'SET_DISTRICT_LIST', payload: response.data });
   } catch (error) {
@@ -22,7 +22,7 @@ function* fetchDistrictList(action) {
 
 function* fetchSchoolList(action) {
   try {
-    let district = action.payload;
+    const district = action.payload;
     const response = yield axios.get(`/api/data/school/${district}`);
     yield put({ type: 'SET_SCHOOL_LIST', payload: response.data });
   } catch (error) {
@@ -32,8 +32,9 @@ function* fetchSchoolList(action) {
 
 function* fetchDatasetList(action) {
   try {
-    let { currentScope, scopeInfo } = action.payload;
+    const { currentScope, scopeInfo } = action.payload;
     const response = yield axios.get(`/api/data/dataset/${currentScope}/${scopeInfo}`);
+    console.log('response:', response.data);
     yield put({ type: 'SET_DATASET_LIST', payload: response.data });
   } catch (error) {
     console.log('list of datasets GET request failed', error);

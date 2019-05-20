@@ -1,0 +1,28 @@
+{
+   "extends": [
+      "airbnb"
+   ],
+   "env": {
+      "browser": true,
+      "node": true,
+      "mocha": true,
+      "es6": true
+   },
+   "parser": "babel-eslint",
+   "parserOptions": {
+      "ecmaFeatures": {
+         "jsx": true
+      }
+   },
+   "rules": {
+      "no-console": 0,
+      "react/destructuring-assignment": 0,
+      "react/prop-types": 0,
+      "react/no-array-index-key": 0,
+      "react/jsx-filename-extension": 0,
+      "max-len": 0,
+      "prefer-destructuring": 0,
+      "no-plusplus": 0,
+      "no-shadow": 1
+   }
+}

@@ -6,25 +6,33 @@ import './UserPage.css';
 // this could also be written with destructuring parameters as:
 // const UserPage = ({ user }) => (
 // and then instead of `props.user.username` you could use `user.username`
-const UserPage = (props) => (
+const UserPage = props => (
   <div className="UserPage-div">
     <Segment>
-      <Header as='h1'>
-        Welcome, {props.user.username}!
+      <Header as="h1">
+        Welcome,
+        {' '}
+        {props.user.username}
+!
       </Header>
-      <p>Your ID is: {props.user.id}</p>
+      <p>
+Your ID is:
+        {props.user.id}
+      </p>
 
       <Form>
 
         <Form.Button
           primary
-          onClick={() => { props.history.push('/selection') }} >
+          onClick={() => { props.history.push('/selection'); }}
+        >
           Selection Page
         </Form.Button>
         <Form.Button
           negative
           basic
-          onClick={() => props.dispatch({ type: 'LOGOUT' })} >
+          onClick={() => props.dispatch({ type: 'LOGOUT' })}
+        >
           Log Out
         </Form.Button>
 

@@ -20,7 +20,7 @@ const rootReducer = combineReducers({
   scopeOption, // will store the names of states, relevant districts, and relevant schools
   currentDataset, // stores current dataset to be visualized
   selectedScope, // stores information regarding the current selected scope of data
-  selectionMenuProgress, //stores booleans that determine if user can progress in selection menu
+  selectionMenuProgress, // stores booleans that determine if user can progress in selection menu
 });
 
 export default rootReducer;

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Form, Segment, Header, Message } from 'semantic-ui-react';
+import {
+  Form, Segment, Header, Message,
+} from 'semantic-ui-react';
 import './RegisterPage.css';
 
 class RegisterPage extends Component {
@@ -34,27 +36,30 @@ class RegisterPage extends Component {
   // Takes arguements of properties for Form.Input component
   renderFormInput = (label, type, name, value) => {
     // if error message exists, renders input with 'error' property
-    if (!!this.props.errors.registrationMessage) {
+    if (this.props.errors.registrationMessage) {
       return (
         <Form.Input
           error
-          label={label} type={type}
-          name={name} value={value}
+          label={label}
+          type={type}
+          name={name}
+          value={value}
           placeholder={label}
           onChange={this.handleInputChangeFor(name)}
         />
-      )
+      );
       // else, renders standard input field
-    } else {
-      return (
-        <Form.Input
-          label={label} type={type}
-          name={name} value={value}
-          placeholder={label}
-          onChange={this.handleInputChangeFor(name)}
-        />
-      )
     }
+    return (
+      <Form.Input
+        label={label}
+        type={type}
+        name={name}
+        value={value}
+        placeholder={label}
+        onChange={this.handleInputChangeFor(name)}
+      />
+    );
   }
 
   render() {
@@ -73,13 +78,14 @@ class RegisterPage extends Component {
         <Segment>
           <Header as="h1">User Registration</Header>
           <Form onSubmit={this.registerUser}>
-            {this.renderFormInput("Username", "text", "username", this.state.username)}
-            {this.renderFormInput("Password", "password", "password", this.state.password)}
+            {this.renderFormInput('Username', 'text', 'username', this.state.username)}
+            {this.renderFormInput('Password', 'password', 'password', this.state.password)}
             <Form.Button
               primary
               fluid
               type="submit"
-              name="submit" >
+              name="submit"
+            >
               Register
             </Form.Button>
             <Form.Button
@@ -88,7 +94,8 @@ class RegisterPage extends Component {
               fluid
               size="small"
               type="button"
-              onClick={() => { this.props.dispatch({ type: 'SET_TO_LOGIN_MODE' }) }} >
+              onClick={() => { this.props.dispatch({ type: 'SET_TO_LOGIN_MODE' }); }}
+            >
               Return to Login Page
             </Form.Button>
           </Form>
