@@ -31,7 +31,12 @@ class SchoolDropdown extends Component {
          />
        );
      }
-     const schoolListOptions = this.props.schoolList.map((option, i) => ({ key: i, value: option.NCES_school_id, text: option.school_name }));
+     const schoolListOptions = this.props.schoolList
+       .map((option, i) => ({
+         key: i,
+         value: option.NCES_school_id,
+         text: option.school_name,
+       }));
 
      return (
        <Form.Dropdown

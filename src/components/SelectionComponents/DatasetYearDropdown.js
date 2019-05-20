@@ -31,8 +31,13 @@ class DatasetYearDropdown extends Component {
     }
 
     const dataSetList = this.props.datasetList;
-    const datasetYearOptions = dataSetList.filter((x, i) => dataSetList[i].table_name === this.props.datasetValue)
-      .map((x, i) => ({ key: i + 1, value: dataSetList[i].Year, text: dataSetList[i].Year }));
+    const datasetYearOptions = dataSetList
+      .filter((x, i) => dataSetList[i].table_name === this.props.datasetValue)
+      .map((x, i) => ({
+        key: i + 1,
+        value: dataSetList[i].Year,
+        text: dataSetList[i].Year,
+      }));
 
     return (
       <Form.Field

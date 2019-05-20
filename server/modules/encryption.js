@@ -11,7 +11,14 @@ const encryptPassword = (password) => {
   return bcrypt.hashSync(password, salt);
 };
 
-const comparePassword = (candidatePassword, storedPassword) => bcrypt.compareSync(candidatePassword, storedPassword);
+const comparePassword = (
+  candidatePassword,
+  storedPassword,
+) => bcrypt.compareSync(
+  candidatePassword,
+  storedPassword,
+);
+
 module.exports = {
   encryptPassword,
   comparePassword,

@@ -23,7 +23,6 @@ function* setSelectedScopeFresh(action) {
 
     yield put({ type: 'GET_DATASET_LIST', payload: datasetListPayload });
 
-
     // Saga calls
     yield put({ type: 'GET_STATE_LIST' });
     yield put({ type: 'GET_DISTRICT_LIST', payload: stateValue });

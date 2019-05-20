@@ -36,7 +36,12 @@ class StateDropdown extends Component {
         />
       );
     }
-    const stateListOptions = this.props.stateList.map((option, i) => ({ key: i, value: option.state, text: option.state_name }));
+    const stateListOptions = this.props.stateList
+      .map((option, i) => ({
+        key: i,
+        value: option.state,
+        text: option.state_name,
+      }));
 
     return (
       <Form.Field

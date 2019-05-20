@@ -33,7 +33,12 @@ class DatasetDropdown extends Component {
     const dataSetList = this.props.datasetList;
     const distinctList = [...new Set(dataSetList.map(x => x.table_name))];
 
-    const datasetOptions = distinctList.map((x, i) => ({ key: i + 1, value: distinctList[i], text: distinctList[i] }));
+    const datasetOptions = distinctList
+      .map((x, i) => ({
+        key: i + 1,
+        value: distinctList[i],
+        text: distinctList[i],
+      }));
 
     //  for (const i in distinctList) {
     //    datasetOptions.push({

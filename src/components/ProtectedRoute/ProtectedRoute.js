@@ -44,8 +44,8 @@ const ProtectedRoute = (props) => {
   // We return a Route component that gets added to our list of routes
   return (
     <Route
-        // all props like 'exact' and 'path' that were passed in
-        // are now passed along to the 'Route' Component
+      // all props like 'exact' and 'path' that were passed in
+      // are now passed along to the 'Route' Component
       {...otherProps}
       component={ComponentToShow}
     />

@@ -31,7 +31,11 @@ class DistrictDropdown extends Component {
          />
        );
      }
-     const districtListOptions = this.props.districtList.map((option, i) => ({ key: i, value: option.NCES_district_id, text: option.LEA_name }));
+     const districtListOptions = this.props.districtList.map((option, i) => ({
+       key: i,
+       value: option.NCES_district_id,
+       text: option.LEA_name,
+     }));
 
      return (
        <Form.Dropdown
